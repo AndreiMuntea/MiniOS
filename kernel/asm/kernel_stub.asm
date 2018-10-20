@@ -1,11 +1,6 @@
 extern main
 
-[bits 32]
+[bits 64]
 KernelStub:
-    push ebp 
-    mov ebp, esp
-    
     call main
-
-    pop ebp
     ret

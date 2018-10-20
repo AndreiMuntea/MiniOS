@@ -217,6 +217,8 @@ Realm64:
     call rax
     break;
 
+    call kernel_base
+
 TestPagination:
     ret
 
