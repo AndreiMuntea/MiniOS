@@ -106,7 +106,6 @@ ProtectedModeEntryPoint:
     break
 
     ; Activating long mode
-
     mov eax, cr0
     and eax, 7FFFh          ; Disable paging (clear CR0.PG bit - bit 31)  
     mov cr0, eax 
@@ -115,25 +114,16 @@ ProtectedModeEntryPoint:
     mov edi, PML4T
     mov ecx, 4096
     xor eax, eax
-    res stosb       
-
-    mov eax, PML4T
-	mov cr3, eax            ; Set CR3 to point to PML4T address
+    rep stosd       
 
     ; PML4T[0] = PDT
-    mov eax, PDPT
-    or eax, 011b ; user mode / R-W / PML4E present 
-    mov [PML4T],  eax 
-
+    mov dword [PML4T],  PDPT | 011b    ; user mode / R-W / PML4E present
+    
     ; PDPT[0] = PDT 
-    mov eax, PDT
-    or eax, 011b ; user mode / R-W / PDPT present 
-	mov [PDPT], eax
+    mov dword [PDPT],   PDT  | 011b    ; user mode / R-W / PDPT present
 
     ; PDT[0] = PT 
-    mov eax, PT
-    or eax, 011b ; user mode / R-W / PDT present 
-	mov [PDT], eax   
+    mov dword [PDT],    PT   | 011b    ; user mode / R-W / PDT present
 
 	; Set up PT
 	mov eax, PT
@@ -148,14 +138,13 @@ ProtectedModeEntryPoint:
     loop .SetEntry
 
     ; PDPT[1] = PDT  - so 400000h memory points here too (1gb)
-    mov eax, PDT
-    or eax, 011b ; user mode / R-W / PDPT present 
-	mov [PDPT + 8], eax
+	mov dword [PDPT + 8],   PDT | 011b  ; user mode / R-W / PDPT present
 
     ; PML4T[1] = PDPT - so 8000000000h memory points here too (512 gb)
-    mov eax, PDPT
-    or eax, 011b ; user mode / R-W / PDPT present
-    mov [PML4T + 8], eax
+    mov dword [PML4T + 8],  PDPT | 011b ; user mode / R-W / PDPT present
+
+    mov eax, PML4T
+	mov cr3, eax              ; Set CR3 to point to PML4T address
 
     mov eax, cr4
     or eax, 1 << 5            ; Enable physical-address extensions (set CR4.PAE bit - bit 5)
