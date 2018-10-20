@@ -57,9 +57,9 @@ def LoadKernel(KernelSourcePath, OutputImage):
 
 
 def AddPadding(Path):
-    floppySize = 33554432  # 32 mb
+    diskSize = 33554432  # 32 mb
     actualSize = os.path.getsize(Path)
-    padding = '\0' * (floppySize - actualSize)
+    padding = '\0' * (diskSize - actualSize)
 
     with open(Path, 'ab') as f:
         f.write(padding)
