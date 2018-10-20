@@ -7,7 +7,7 @@
 [org origin]
 BootPoint:
     ; Clear segment registers
-    xor eax, eax
+    xor ax, ax
     mov ds, ax      
     mov es, ax      
     mov ss, ax      

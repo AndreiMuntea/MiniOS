@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-ASM_DIRECTORY = os.path.join(os.getcwd(), "ASM")
+BOOTLOADER_DIRECTORY = os.path.join(os.getcwd(), "bootloader")
 IMAGE_FILE_PATH = os.path.join(os.getcwd(), "bin", "image.bin")
 KERNEL_SOURCE_PATH_DIRECTORY = os.path.join(os.getcwd(), "kernel")
 BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
@@ -14,7 +14,7 @@ def CreateFile(File):
         pass
 
 
-def Assemble(AsmInputDirectory, OutputImage):
+def Assemblebootloader(AsmInputDirectory, OutputImage):
     with open(OutputImage, 'wb') as o:
         for root, _, files in os.walk(AsmInputDirectory):
             for f in files:
@@ -72,7 +72,7 @@ def StartBochs():
 
 
 if __name__ == "__main__":
-    Assemble(ASM_DIRECTORY, IMAGE_FILE_PATH)
-    #LoadKernel(KERNEL_SOURCE_PATH_DIRECTORY, IMAGE_FILE_PATH)
+    Assemblebootloader(BOOTLOADER_DIRECTORY, IMAGE_FILE_PATH)
+    LoadKernel(KERNEL_SOURCE_PATH_DIRECTORY, IMAGE_FILE_PATH)
     AddPadding(IMAGE_FILE_PATH)
     StartBochs()
