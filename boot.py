@@ -7,13 +7,6 @@ KERNEL_SOURCE_PATH_DIRECTORY = os.path.join(os.getcwd(), "kernel")
 BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
 
 
-def CreateFile(File):
-    if os.path.isfile(File):
-        os.unlink(File)
-    with open(File, 'w+'):
-        pass
-
-
 def Assemblebootloader(AsmInputDirectory, OutputImage):
     with open(OutputImage, 'wb') as o:
         for root, _, files in os.walk(AsmInputDirectory):
@@ -23,7 +16,6 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
                 path = os.path.join(root, f)
                 out = path + ".obj"
 
-                CreateFile(out)
                 os.system('nasm -o "' + str(out) + '" -f bin "' + str(path) + '"')
 
                 with open(out, 'rb') as f:

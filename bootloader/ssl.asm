@@ -177,7 +177,7 @@ GdtDescriptor64:
 
 Gdt64:
     .null: ISTRUC GlobalDescriptorTableEntry
-        AT GlobalDescriptorTableEntry.segment_limit, dw 0                    
+        AT GlobalDescriptorTableEntry.segment_limit, dw 0                                    
         AT GlobalDescriptorTableEntry.base_low,      dw 0
         AT GlobalDescriptorTableEntry.base_middle,   db 0
         AT GlobalDescriptorTableEntry.access,        db 0
@@ -188,15 +188,15 @@ Gdt64:
         AT GlobalDescriptorTableEntry.segment_limit, dw 0               ; Field ignored in long mode
         AT GlobalDescriptorTableEntry.base_low,      dw 0               ; Field ignored in long mode
         AT GlobalDescriptorTableEntry.base_middle,   db 0               ; Field ignored in long mode                                                 
-        AT GlobalDescriptorTableEntry.access,        db 10011100b             
-        AT GlobalDescriptorTableEntry.granularity,   db 00101111b       
+        AT GlobalDescriptorTableEntry.access,        db 10011000b                              
+        AT GlobalDescriptorTableEntry.granularity,   db 00101111b                        
         AT GlobalDescriptorTableEntry.base_high,     db 0
     IEND
     .data_descriptor: ISTRUC GlobalDescriptorTableEntry
         AT GlobalDescriptorTableEntry.segment_limit, dw 0
         AT GlobalDescriptorTableEntry.base_low,      dw 0
         AT GlobalDescriptorTableEntry.base_middle,   db 0
-        AT GlobalDescriptorTableEntry.access,        db 10010010b             
+        AT GlobalDescriptorTableEntry.access,        db 10010010b                                               
         AT GlobalDescriptorTableEntry.granularity,   db 0               
         AT GlobalDescriptorTableEntry.base_high,     db 0
     IEND
@@ -204,7 +204,6 @@ Gdt64:
 
 [bits 64]
 Realm64:
-    cli
     mov rax, FIELD_OFFSET(Gdt64, Gdt64.data_descriptor) 
     mov ds, ax
     mov ss, ax 
