@@ -147,10 +147,15 @@ ProtectedModeEntryPoint:
         add eax, 8      ; move to the next page
     loop .SetEntry
 
-    ; PDPT[1] = PDT 
+    ; PDPT[1] = PDT  - so 400000h memory points here too (1gb)
     mov eax, PDT
     or eax, 011b ; user mode / R-W / PDPT present 
 	mov [PDPT + 8], eax
+
+    ; PML4T[1] = PDPT - so 8000000000h memory points here too (512 gb)
+    mov eax, PDPT
+    or eax, 011b ; user mode / R-W / PDPT present
+    mov [PML4T + 8], eax
 
     mov eax, cr4
     or eax, 1 << 5            ; Enable physical-address extensions (set CR4.PAE bit - bit 5)
@@ -161,10 +166,10 @@ ProtectedModeEntryPoint:
     or eax, 1 << 8            ; Enable long mode (set IA32_EFER.LME bit - bit 8)
     wrmsr        
 
-    lgdt [GdtDescriptor64]      ; Load GDT register with start address of Global Descriptor Table
+    lgdt [GdtDescriptor64]    ; Load GDT register with start address of Global Descriptor Table
 
     mov eax, cr0
-    or eax, (1<<31) | (1<<0)  ; Enable paging (set CR0.PG bit - bit 31 and CR0.PM bit - bit 1)  
+    or eax, (1<<31) | (1<<0)  ; Enable paging (set CR0.PG bit - bit 31 and CR0.PM bit - bit 0)  
     mov cr0, eax 
 
     ; Perform far jump to selector 08h (offset into GDT, pointing at code_descriptor) to load CS with proper 64cs descriptor
@@ -219,6 +224,10 @@ Realm64:
     call rax
     break;
 
+    mov rax, TestPagination + 8000000000h
+    call rax
+    break;
+
 TestPagination:
     ret
 
@@ -234,7 +243,7 @@ TestPagination:
 ; Bits 38:30  - Page Directory Pointer offset
 ; Bits 29:21  - Page Directory offset
 ; Bits 20:12  - Page Table offset
-; Bits 11:0   - Physical page offset (4KB physica`l page)
+; Bits 11:0   - Physical page offset (4KB physical page)
 ;=======================================================================================    
 
 ;=======================================================================================
@@ -364,12 +373,12 @@ TestPagination:
 ;=======================================================================================
 
 ;=======================================================================================
-; PML4
+; PML4 - 1 entry: 512 * 1GB = 512 GB
 ; 63 62                  52 51                   12 11  9 8 7 6 5 4 3 2 1 0
 ; |  |                     |                       |                       |
 ; 
 ; Bit 63 :    NX
-; Bits 62:52  Available -> 2^10 (1024) entries which can be defined in table 
+; Bits 62:52  Available -> 512 entries (1 entry = 8 bytes)
 ; Bits 51:12  Page-Directory-Pointer Base address
 ; Bits 11:9   AVL 
 ; Bit  8      Must be 0
@@ -384,12 +393,12 @@ TestPagination:
 ;=======================================================================================
 
 ;=======================================================================================
-; PPDE
+; PPDE - 1 entry = 512 * 2MB = 1GB
 ; 63 62                  52 51                   12 11  9 8 7 6 5 4 3 2 1 0
 ; |  |                     |                       |                       |
 ; 
 ; Bit 63 :    NX
-; Bits 62:52  Available -> 2^10 (1024) entries which can be defined in table 
+; Bits 62:52  Available -> 512 entries (1 entry = 8 bytes) 
 ; Bits 51:12  Page-Directory Base Address
 ; Bits 11:9   AVL 
 ; Bit  8      Ignored
@@ -404,12 +413,12 @@ TestPagination:
 ;=======================================================================================
 
 ;=======================================================================================
-; PDE
+; PDE - 1 entry = 512 B * 4kb = 2 MB
 ; 63 62                  52 51                   12 11  9 8 7 6 5 4 3 2 1 0
 ; |  |                     |                       |                       |
 ; 
 ; Bit 63 :    NX
-; Bits 62:52  Available -> 2^10 (1024) entries which can be defined in table 
+; Bits 62:52  Available -> 512 entries (1 entry = 8 bytes)
 ; Bits 51:12  Page-Table Base Address
 ; Bits 11:9   AVL 
 ; Bit  8      Ignored
@@ -424,12 +433,12 @@ TestPagination:
 ;=======================================================================================
 
 ;=======================================================================================
-; PTE
+; PTE - 1 entry = 4KB
 ; 63 62                  52 51                   12 11  9 8 7 6 5 4 3 2 1 0
 ; |  |                     |                       |                       |
 ; 
 ; Bit 63 :    NX
-; Bits 62:52  Available -> 2^10 (1024) entries which can be defined in table 
+; Bits 62:52  Available -> 512 entries (1 entry = 8 bytes)
 ; Bits 51:12  Physical-Page Base Address 
 ; Bits 11:9   AVL 
 ; Bit  8      G
