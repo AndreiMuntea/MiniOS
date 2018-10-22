@@ -25,11 +25,12 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
 
 
 def LoadKernel(KernelSourcePath, OutputImage):
-    c_sources = ["kernel.c"]
-    asm_sources = ["kernel_stub.asm"]
+    c_sources = ["kernel.c", "global.c", "screen.c"]
+    asm_sources = ["kernel_stub.asm", "commons.asm"]
 
     lnk = ""
     obj = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", "kernel.bin")
+    headers = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
 
     for source in asm_sources:
         src = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", source)
@@ -44,12 +45,12 @@ def LoadKernel(KernelSourcePath, OutputImage):
         asmo = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".asmo")
         output = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".obj")
 
-        os.system('cc1_x86_x64.exe -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel')
+        os.system('cc1_x86_x64.exe -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
         os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
 
         lnk += '"' + output + '" '
 
-    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 --oformat binary -o "' + obj + '" ' + lnk + " -m elf_x86_64 ")
+    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o "' + obj + '" ' + lnk + " -m elf_x86_64 ")
 
     with open(OutputImage, 'ab') as o:
         with open(obj, 'rb') as p:
