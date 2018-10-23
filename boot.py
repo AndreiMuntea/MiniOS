@@ -1,5 +1,5 @@
 import os
-import tempfile
+
 
 BOOTLOADER_DIRECTORY = os.path.join(os.getcwd(), "bootloader")
 IMAGE_FILE_PATH = os.path.join(os.getcwd(), "bin", "image.bin")
@@ -13,39 +13,40 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
             for f in files:
                 if not f.endswith(".asm"):
                     continue
-                path = os.path.join(root, f)
-                out = path + ".obj"
 
-                os.system('nasm -O0 -o "' + str(out) + '" -f bin "' + str(path) + '"')
+                path    = '"' + os.path.join(root, f) + '"'
+                obj     = os.path.join(root, f) + '.obj'
+                out     = '"' + obj + '"'
 
-                with open(out, 'rb') as f:
-                    o.write(f.read())
-
-                os.unlink(out)
+                os.system('nasm -O0 -o ' + out + ' -f bin ' + path)
+                with open(obj, 'rb') as ob:
+                    o.write(ob.read())
+                
+                os.unlink(obj)
 
 
 def LoadKernel(KernelSourcePath, OutputImage):
     bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
-    headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
-    obj             = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", "kernel.bin")
+    obj             = os.path.join(bin_directory, "kernel.bin")
+    headers         = '"' + os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers") + '"'
     lnk             = ""
 
     for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
         for f in files:
-            src     = os.path.join(root, f)
-            output  = os.path.join(bin_directory, f + '.obj')
-            asmo    = os.path.join(bin_directory, f + ".asmo")
+            src     = '"' + os.path.join(root, f) + '"'
+            output  = '"' + os.path.join(bin_directory, f + '.obj') + '"'
+            asmo    = '"' + os.path.join(bin_directory, f + '.asmo') + '"'
 
             if f.endswith(".asm"):
-                os.system('nasm -f elf64 -O0 -o "' + output + '" "' + src + '"')
+                os.system('nasm -f elf64 -O0 -o ' + output + ' ' + src)
             elif f.endswith(".c"):
-                os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
+                os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 ' + src + ' -o ' + asmo + ' -Wall -masm=intel -I ' + headers)
                 os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
             else:
                 continue
             lnk += ' "' + output + '" ' 
 
-    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o "' + obj + '" ' + lnk + " -m elf_x86_64 ")
+    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o ' + obj + ' ' + lnk + ' -m elf_x86_64')
     
     with open(OutputImage, 'ab') as o:
         with open(obj, 'rb') as p:
