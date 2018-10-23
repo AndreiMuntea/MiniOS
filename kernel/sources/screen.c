@@ -1,8 +1,9 @@
 #include "screen.h"
 #include "global.h"
+#include "utils.h"
 
 void 
-ClearScreen(void)
+ScClearScreen(void)
 {
     for(int i = 0; i < MAX_OFFSET; ++i)
     {
@@ -13,7 +14,7 @@ ClearScreen(void)
 }
 
 void
-PutChar(
+ScPrintChar(
     char Character
 )
 {
@@ -26,19 +27,19 @@ PutChar(
 }
 
 void
-PutString(
+ScPrintString(
     char*   String,
     UINT16  StringSize
 )
 {
     for(UINT16 i = 0; i < StringSize; ++i)
     {
-        PutChar(String[i]);
+        ScPrintChar(String[i]);
     }
 }
 
 void
-PutNumber(
+ScPrintNumber(
     QWORD Number
 )
 {
@@ -48,7 +49,7 @@ PutNumber(
 
     if (Number == 0)
     {
-        PutString("0x0", sizeof("0x0"));
+        ScPrintString("0x0", sizeof("0x0") - sizeof(char));
         return;
     }
 
@@ -61,18 +62,15 @@ PutNumber(
     {
         rem = Number % 16;
         Number = Number / 16;
-        result[size++] = (rem < 10) ?  '0' + rem
-                                    :  'A' + rem - 10;  
+        result[size++] = UtilsHexdigitToChar(rem); 
     }
 
     size += 2;  // for 0x
     for(BYTE i = 0, j = size - 1; i < j; ++i, --j)
     {
-        char aux = result[i];
-        result[i] = result[j];
-        result[j] = aux;
+        UtilsSwapBytes(&result[i], &result[j]);
     }
 
     result[1] = 'x';
-    PutString(result, size);
+    ScPrintString(result, size);
 }

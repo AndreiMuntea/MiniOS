@@ -24,27 +24,21 @@ typedef struct _SCREEN_DATA
 
 
 void 
-ClearScreen(void);
+ScClearScreen(void);
 
 void
-Print(
-    char* Format, 
-    ...
-);
-
-void
-PutString(
+ScPrintString(
     char*   String,
     UINT16  StringSize
 );
 
 void
-PutChar(
+ScPrintChar(
     char Character
 );
 
 void
-PutNumber(
+ScPrintNumber(
     QWORD Number
 );
 

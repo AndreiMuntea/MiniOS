@@ -6,13 +6,13 @@ int main(void)
 {
     InitGlobalData();
 
-    ClearScreen();
+    ScClearScreen();
 
     DebugBreak();
     for(int i = 0; i < 20; ++i)
     {
-        PutNumber(i);
-        PutChar(' ');
+        ScPrintNumber(i);
+        ScPrintChar(' ');
     }
     DebugBreak();
 
