@@ -41,12 +41,12 @@ def LoadKernel(KernelSourcePath, OutputImage):
                 os.system('nasm -f elf64 -O0 -o ' + output + ' ' + src)
             elif f.endswith(".c"):
                 os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 ' + src + ' -o ' + asmo + ' -Wall -masm=intel -I ' + headers)
-                os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
+                os.system('as_x86_x64.exe --64 ' + asmo + ' -o ' + output + ' -msyntax=intel')
             else:
                 continue
-            lnk += ' "' + output + '" ' 
+            lnk += output + ' ' 
 
-    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o ' + obj + ' ' + lnk + ' -m elf_x86_64')
+    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o "' + obj + '" ' + lnk + ' -m elf_x86_64')
     
     with open(OutputImage, 'ab') as o:
         with open(obj, 'rb') as p:
