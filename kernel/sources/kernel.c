@@ -9,8 +9,11 @@ int main(void)
     ClearScreen();
 
     DebugBreak();
-    PutString("Ana are mere Ana are mere", sizeof("Ana are mere Ana are mere"));
-
+    for(int i = 0; i < 20; ++i)
+    {
+        PutNumber(i);
+        PutChar(' ');
+    }
     DebugBreak();
 
     UninitGlobalData();

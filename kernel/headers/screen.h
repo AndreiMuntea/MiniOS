@@ -27,6 +27,12 @@ void
 ClearScreen(void);
 
 void
+Print(
+    char* Format, 
+    ...
+);
+
+void
 PutString(
     char*   String,
     UINT16  StringSize
@@ -35,6 +41,11 @@ PutString(
 void
 PutChar(
     char Character
+);
+
+void
+PutNumber(
+    QWORD Number
 );
 
 #endif //__SCREEN_H__
