@@ -25,33 +25,29 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
 
 
 def LoadKernel(KernelSourcePath, OutputImage):
-    c_sources = ["kernel.c", "global.c", "screen.c"]
-    asm_sources = ["kernel_stub.asm", "commons.asm"]
+    bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
+    headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
+    obj             = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", "kernel.bin")
+    lnk             = ""
 
-    lnk = ""
-    obj = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", "kernel.bin")
-    headers = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
+    for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
+        for f in files:
+            print(f)
+            src     = os.path.join(root, f)
+            output  = os.path.join(bin_directory, f + '.obj')
+            asmo    = os.path.join(bin_directory, f + ".asmo")
 
-    for source in asm_sources:
-        src = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", source)
-        output = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".o")
-
-        os.system('nasm -f elf64 -O0 -o "' + output + '" "' + src + '"')
-
-        lnk += '"' + output + '" '
-
-    for source in c_sources:
-        src = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "sources", source)
-        asmo = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".asmo")
-        output = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".obj")
-
-        os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
-        os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
-
-        lnk += '"' + output + '" '
+            if f.endswith(".asm"):
+                os.system('nasm -f elf64 -O0 -o "' + output + '" "' + src + '"')
+            elif f.endswith(".c"):
+                os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
+                os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
+            else:
+                continue
+            lnk += ' "' + output + '" ' 
 
     os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o "' + obj + '" ' + lnk + " -m elf_x86_64 ")
-
+    
     with open(OutputImage, 'ab') as o:
         with open(obj, 'rb') as p:
             o.write(p.read())
