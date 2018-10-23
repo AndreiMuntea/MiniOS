@@ -28,7 +28,6 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
 def LoadKernel(KernelSourcePath, OutputImage):
     bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
     obj             = os.path.join(bin_directory, "kernel.bin")
-    headers         = '"' + os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers") + '"'
     lnk             = ""
 
     for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
@@ -36,6 +35,7 @@ def LoadKernel(KernelSourcePath, OutputImage):
             src     = '"' + os.path.join(root, f) + '"'
             output  = '"' + os.path.join(bin_directory, f + '.obj') + '"'
             asmo    = '"' + os.path.join(bin_directory, f + '.asmo') + '"'
+            headers = '"' + os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers") + '"'
 
             if f.endswith(".asm"):
                 os.system('nasm -f elf64 -O0 -o ' + output + ' ' + src)
