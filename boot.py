@@ -32,7 +32,6 @@ def LoadKernel(KernelSourcePath, OutputImage):
 
     for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
         for f in files:
-            print(f)
             src     = os.path.join(root, f)
             output  = os.path.join(bin_directory, f + '.obj')
             asmo    = os.path.join(bin_directory, f + ".asmo")
