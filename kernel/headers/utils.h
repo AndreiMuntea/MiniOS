@@ -9,6 +9,12 @@ UtilsSwapBytes(
     BYTE* SecondByte
 );
 
+void 
+UtilsSwapChars(
+    char* FirstChar,
+    char* SecondChar
+);
+
 char
 UtilsHexdigitToChar(
     BYTE Hexdigit

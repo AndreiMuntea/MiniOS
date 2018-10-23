@@ -28,8 +28,7 @@ ScClearScreen(void);
 
 void
 ScPrintString(
-    char*   String,
-    UINT16  StringSize
+    char*   String
 );
 
 void
@@ -40,6 +39,12 @@ ScPrintChar(
 void
 ScPrintNumber(
     QWORD Number
+);
+
+void
+ScPrint(
+    char*   Format,
+    ...
 );
 
 #endif //__SCREEN_H__

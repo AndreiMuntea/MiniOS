@@ -9,11 +9,8 @@ int main(void)
     ScClearScreen();
 
     DebugBreak();
-    for(int i = 0; i < 20; ++i)
-    {
-        ScPrintNumber(i);
-        ScPrintChar(' ');
-    }
+    char ana[] = "Ana are";
+    ScPrint("Afisam %s cu %d cu ahahah %s", ana, (QWORD)(5239), ana);
     DebugBreak();
 
     UninitGlobalData();

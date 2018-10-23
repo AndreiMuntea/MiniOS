@@ -28,13 +28,12 @@ ScPrintChar(
 
 void
 ScPrintString(
-    char*   String,
-    UINT16  StringSize
+    char*   String
 )
 {
-    for(UINT16 i = 0; i < StringSize; ++i)
+    for(; *String != 0; ++String)
     {
-        ScPrintChar(String[i]);
+        ScPrintChar(*String);
     }
 }
 
@@ -43,19 +42,14 @@ ScPrintNumber(
     QWORD Number
 )
 {
-    char result[18] = {0};
+    char result[19] = {0};
     BYTE rem = 0;
     BYTE size = 0;
 
     if (Number == 0)
     {
-        ScPrintString("0x0", sizeof("0x0") - sizeof(char));
+        ScPrintString("0x0");
         return;
-    }
-
-    for(int i = 0; i < sizeof(result); ++i)
-    {
-        result[i] = '0';
     }
 
     while (Number != 0)
@@ -68,9 +62,42 @@ ScPrintNumber(
     size += 2;  // for 0x
     for(BYTE i = 0, j = size - 1; i < j; ++i, --j)
     {
-        UtilsSwapBytes(&result[i], &result[j]);
+        UtilsSwapChars(&result[i], &result[j]);
     }
-
+    result[0] = '0';
     result[1] = 'x';
-    ScPrintString(result, size);
+
+    ScPrintString(result);
+}
+
+void
+ScPrint(
+    char*   Format,
+    ...
+)
+{
+    BYTE argumentIndex = 0;
+
+    while(*Format != 0)
+    {
+        char currentChar = *Format++;
+        if (currentChar != '%')
+        {
+            ScPrintChar(currentChar);
+            continue;
+        }
+
+        char type = *Format++;
+        void* argument = (void*)((BYTE*)(&Format) + ++argumentIndex * sizeof(void*));
+
+        switch (type)
+        {
+        case 'd':
+            ScPrintNumber(*(QWORD*)argument);
+            break;
+        case 's':
+            ScPrintString(*(char**)argument);
+            break;
+        }
+    }
 }

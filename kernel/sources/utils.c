@@ -11,6 +11,17 @@ UtilsSwapBytes(
     *SecondByte = aux;
 }
 
+void 
+UtilsSwapChars(
+    char* FirstChar,
+    char* SecondChar
+)
+{
+    char aux    = *FirstChar;
+    *FirstChar  = *SecondChar;
+    *SecondChar = aux;
+}
+
 char
 UtilsHexdigitToChar(
     BYTE Hexdigit
