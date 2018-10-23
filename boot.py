@@ -45,7 +45,7 @@ def LoadKernel(KernelSourcePath, OutputImage):
         asmo = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".asmo")
         output = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin", source + ".obj")
 
-        os.system('cc1_x86_x64.exe -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
+        os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 "' + src + '" -o "' + asmo + '" -Wall -masm=intel -I "' + headers +'"')
         os.system('as_x86_x64.exe --64 "' + asmo + '" -o "' + output + '" -msyntax=intel')
 
         lnk += '"' + output + '" '
