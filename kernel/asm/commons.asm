@@ -1,11 +1,9 @@
 GLOBAL DebugBreak
 DebugBreak:
-    push rsp
-    mov rbp, rsp 
-    ;pusha 
+    push rbp
+    mov rbp, rsp
 
     xchg bx, bx
 
-    ;popa 
-    pop rbp
+    leave
     ret

@@ -9,10 +9,8 @@ int main(void)
     ClearScreen();
 
     DebugBreak();
-    for(int i = 0; i < 2; ++i)
-    {
-        PutChar('q');
-    }
+    PutString("Ana are mere Ana are mere", sizeof("Ana are mere Ana are mere"));
+
     DebugBreak();
 
     UninitGlobalData();

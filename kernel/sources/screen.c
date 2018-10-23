@@ -18,8 +18,8 @@ PutChar(
     char Character
 )
 {
-    BYTE offset = gGlobalData.ScreenData.CurrentOffset;
-    BYTE color  = gGlobalData.ScreenData.Color;
+    UINT16 offset = gGlobalData.ScreenData.CurrentOffset;
+    BYTE color    = gGlobalData.ScreenData.Color;
 
     gGlobalData.ScreenData.VideoMemory[offset].Character = Character;
     gGlobalData.ScreenData.VideoMemory[offset].Color     = color;
