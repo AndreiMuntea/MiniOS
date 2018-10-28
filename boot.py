@@ -14,11 +14,10 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
                 if not f.endswith(".asm"):
                     continue
 
-                path    = '"' + os.path.join(root, f) + '"'
-                obj     = os.path.join(root, f) + '.obj'
-                out     = '"' + obj + '"'
+                path    = os.path.join(root, f) 
+                obj     = path + '.obj'
 
-                os.system('nasm -O0 -o ' + out + ' -f bin ' + path)
+                os.system('nasm -O0 -o ' + obj + ' -f bin ' + path)
                 with open(obj, 'rb') as ob:
                     o.write(ob.read())
                 
@@ -32,13 +31,14 @@ def LoadKernel(KernelSourcePath, OutputImage):
 
     for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
         for f in files:
-            src     = '"' + os.path.join(root, f) + '"'
-            output  = '"' + os.path.join(bin_directory, f + '.obj') + '"'
-            asmo    = '"' + os.path.join(bin_directory, f + '.asmo') + '"'
-            headers = '"' + os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers") + '"'
+            src             = os.path.join(root, f)
+            output          = os.path.join(bin_directory, f + '.obj')
+            asmo            = os.path.join(bin_directory, f + '.asmo')
+            headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
+            asm_includes    = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
 
             if f.endswith(".asm"):
-                os.system('nasm -f elf64 -O0 -o ' + output + ' ' + src)
+                os.system('nasm -I ' + asm_includes + ' -f elf64 -O0 -o ' + output + ' ' + src)
             elif f.endswith(".c"):
                 os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 ' + src + ' -o ' + asmo + ' -Wall -masm=intel -I ' + headers)
                 os.system('as_x86_x64.exe --64 ' + asmo + ' -o ' + output + ' -msyntax=intel')
@@ -46,7 +46,7 @@ def LoadKernel(KernelSourcePath, OutputImage):
                 continue
             lnk += output + ' ' 
 
-    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o "' + obj + '" ' + lnk + ' -m elf_x86_64')
+    os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o ' + obj + ' ' + lnk + ' -m elf_x86_64')
     
     with open(OutputImage, 'ab') as o:
         with open(obj, 'rb') as p:
@@ -63,7 +63,7 @@ def AddPadding(Path):
 
 
 def StartBochs():
-    os.system('bochsdbg.exe -q -f "' + BOSCH_CFG_FILE_PATH + '"')
+    os.system('bochsdbg.exe -q -f ' + BOSCH_CFG_FILE_PATH)
 
 
 if __name__ == "__main__":

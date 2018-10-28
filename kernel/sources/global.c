@@ -8,6 +8,9 @@ InitGlobalData(void)
     gGlobalData.ScreenData.VideoMemory   = (PSCREEN)(0x000B8000);
     gGlobalData.ScreenData.CurrentOffset = 0;
     gGlobalData.ScreenData.Color         = 0x07;    // lightgrey on black - DOS default
+
+    IntInitializeIdt(&gGlobalData.Idt);
+    IntInitializeIdtDescriptor(&gGlobalData.IdtDescriptor, &gGlobalData.Idt);
 }
 
 void
