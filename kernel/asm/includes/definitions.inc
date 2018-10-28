@@ -57,6 +57,8 @@
 %define PIC_ICW4        00000001b
 ; 8086 MODE
 
+%define PIC_EOI		    0x20	
+
 
 ; ICW - initialization command word
 

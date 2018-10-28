@@ -14,9 +14,8 @@ int main(void)
     ScPrint("All set!");
 
     DebugBreak();
-    while(1)
-    {
-
+    for(;;) {
+        __asm__("hlt");
     }
     
     UninitGlobalData();

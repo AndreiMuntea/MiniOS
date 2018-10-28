@@ -52,6 +52,8 @@ IntSetupPIC:
     ; Mask the interrupts
     mov al, 0
     out PIC_MASTER_DATA, al 
+
+    mov al, 0xFF
     out PIC_SLAVE_DATA,  al 
 
     RESTORE_REGS
@@ -62,7 +64,12 @@ IntSetupPIC:
 IntCommonISR:
     cli
     
-    xchg bx, bx 
+    push rax
+
+    mov al, PIC_EOI
+    out PIC_MASTER_COMMAND, al
+
+    pop rax 
 
     sti 
     iretq 
