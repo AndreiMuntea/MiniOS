@@ -2,6 +2,7 @@
 
 GLOBAL IntLoadIdt
 GLOBAL IntCommonISR
+GLOBAL IntCriticalISR
 
 [Bits 64]
 
@@ -60,16 +61,27 @@ IntSetupPIC:
     leave
     ret 
 
+; void IntCriticalISR(void)
+IntCriticalISR:
+    cli
+    push rax
+
+    hlt
+    mov al, PIC_EOI
+    out PIC_MASTER_COMMAND, al
+
+    pop rax 
+    sti 
+    iretq 
+
 ; void IntCommonISR(void)
 IntCommonISR:
     cli
-    
     push rax
 
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al
 
     pop rax 
-
     sti 
     iretq 

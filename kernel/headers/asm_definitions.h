@@ -12,4 +12,7 @@ IntLoadIdt(
 extern void 
 IntCommonISR(void);
 
+extern void 
+IntCriticalISR(void);
+
 #endif //__ASM_DEFINITIONS_H__

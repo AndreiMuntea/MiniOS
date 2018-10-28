@@ -23,7 +23,14 @@ IntInitializeIdt(
     PIDT    Idt
 )
 {
-    for(UINT16 i = 0; i < IDT_MAX_ENTRIES; ++i)
+    UINT16 i = 0;
+
+    for(; i < IDT_CRITICAL_ENTRIES; ++i)
+    {
+        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCriticalISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
+    }
+
+    for(; i < IDT_MAX_ENTRIES; ++i)
     {
         IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCommonISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
     }

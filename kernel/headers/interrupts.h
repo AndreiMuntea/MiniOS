@@ -3,6 +3,7 @@
 
 #include "definitions.h"
 
+#define IDT_CRITICAL_ENTRIES            32
 #define IDT_MAX_ENTRIES                 256
 #define CODE_SEGMENT_DESCRIPTOR         0x8
 #define INTERRUPT_GATE_TYPE             0x8E        // P = 1b; DPL = 00b; Reserved = 0b; type = 1110b -> code | conforming | executable and readable | not accessed
