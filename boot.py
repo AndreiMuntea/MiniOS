@@ -7,15 +7,15 @@ KERNEL_SOURCE_PATH_DIRECTORY = os.path.join(os.getcwd(), "kernel")
 BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
 
 
-def Assemblebootloader(AsmInputDirectory, OutputImage):
-    with open(OutputImage, 'wb') as o:
-        for root, _, files in os.walk(AsmInputDirectory):
+def Assemblebootloader():
+    with open(IMAGE_FILE_PATH, 'wb') as o:
+        for root, _, files in os.walk(BOOTLOADER_DIRECTORY):
             for f in files:
                 if not f.endswith(".asm"):
                     continue
 
-                path    = os.path.join(root, f) 
-                obj     = path + '.obj'
+                path = os.path.join(root, f) 
+                obj  = path + '.obj'
 
                 os.system('nasm -O0 -o ' + obj + ' -f bin ' + path)
                 with open(obj, 'rb') as ob:
@@ -24,7 +24,7 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
                 os.unlink(obj)
 
 
-def LoadKernel(KernelSourcePath, OutputImage):
+def LoadKernel():
     bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
     headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
     asm_includes    = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
@@ -48,17 +48,17 @@ def LoadKernel(KernelSourcePath, OutputImage):
 
     os.system('ld_x86_x64.exe -O0 -Ttext 0x110000 -Tdata 0x125000 -Tbss 0x150000 --oformat binary -o ' + obj + ' ' + lnk + ' -m elf_x86_64')
     
-    with open(OutputImage, 'ab') as o:
+    with open(IMAGE_FILE_PATH, 'ab') as o:
         with open(obj, 'rb') as p:
             o.write(p.read())
 
 
-def AddPadding(Path):
+def AddPadding():
     diskSize = 33554432  # 32 mb
-    actualSize = os.path.getsize(Path)
+    actualSize = os.path.getsize(IMAGE_FILE_PATH)
     padding = '\0' * (diskSize - actualSize)
 
-    with open(Path, 'ab') as f:
+    with open(IMAGE_FILE_PATH, 'ab') as f:
         f.write(padding)
 
 
@@ -67,7 +67,7 @@ def StartBochs():
 
 
 if __name__ == "__main__":
-    Assemblebootloader(BOOTLOADER_DIRECTORY, IMAGE_FILE_PATH)
-    LoadKernel(KERNEL_SOURCE_PATH_DIRECTORY, IMAGE_FILE_PATH)
-    AddPadding(IMAGE_FILE_PATH)
+    Assemblebootloader()
+    LoadKernel()
+    AddPadding()
     StartBochs()
