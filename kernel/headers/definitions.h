@@ -3,17 +3,17 @@
 
 typedef char                    INT8;
 typedef short                   INT16;
-typedef long                    INT32;
+typedef int                     INT32;
 typedef long long               INT64;
 
 typedef unsigned char           BYTE;
 typedef unsigned short          WORD;
-typedef unsigned long           DWORD;
+typedef unsigned int            DWORD;
 typedef unsigned long long      QWORD;
 
 typedef unsigned char           UINT8;
 typedef unsigned short          UINT16;
-typedef unsigned long           UINT32;
+typedef unsigned int            UINT32;
 typedef unsigned long long      UINT64;
 
 #define CHR_MIN       (-128)                            // maximum (signed) char value

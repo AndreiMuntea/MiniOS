@@ -62,9 +62,7 @@ IntSetupPIC:
 IntCommonISR:
     cli
     
-    push rbx 
     xchg bx, bx 
-    pop rbx
 
     sti 
     iretq 
