@@ -36,7 +36,7 @@ typedef struct _IDT_DESCRIPTOR
 #pragma pack(pop)
 
 void
-InitializeIdtEntry(
+IntInitializeIdtEntry(
     PIDT_GATE_ENTRY Entry,
     QWORD           Offset,
     WORD            Selector,

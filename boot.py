@@ -7,7 +7,7 @@ KERNEL_SOURCE_PATH_DIRECTORY = os.path.join(os.getcwd(), "kernel")
 BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
 
 
-def Assemblebootloader():
+def AssembleBootLoader():
     with open(IMAGE_FILE_PATH, 'wb') as o:
         for root, _, files in os.walk(BOOTLOADER_DIRECTORY):
             for f in files:
@@ -67,7 +67,7 @@ def StartBochs():
 
 
 if __name__ == "__main__":
-    Assemblebootloader()
+    AssembleBootLoader()
     LoadKernel()
     AddPadding()
     StartBochs()

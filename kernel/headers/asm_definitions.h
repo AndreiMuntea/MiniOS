@@ -9,4 +9,7 @@ IntLoadIdt(
     void*   IdtDescriptor
 );
 
+extern void 
+IntCommonISR(void);
+
 #endif //__ASM_DEFINITIONS_H__
