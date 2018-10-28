@@ -7,12 +7,15 @@ int main(void)
     InitGlobalData();
 
     ScClearScreen();
+    ScPrint("Sizeof: %x ", sizeof(IDT_GATE_ENTRY));
+    ScPrint("All set!");
 
     DebugBreak();
-    char ana[] = "Ana are";
-    ScPrint("Afisam %s cu %d cu ahahah %s", ana, (QWORD)(5239), ana);
-    DebugBreak();
+    while(1)
+    {
 
+    }
+    
     UninitGlobalData();
     return 0;
 }

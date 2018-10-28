@@ -92,7 +92,7 @@ ScPrint(
 
         switch (type)
         {
-        case 'd':
+        case 'x':
             ScPrintNumber(*(QWORD*)argument);
             break;
         case 's':

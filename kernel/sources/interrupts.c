@@ -25,7 +25,7 @@ IntInitializeIdt(
 {
     for(UINT16 i = 0; i < IDT_MAX_ENTRIES; ++i)
     {
-        IntInitializeIdtEntry(&Idt->Entries[i], (QWORD)(&IntCommonISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
+        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCommonISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
     }
 }
 
@@ -36,7 +36,7 @@ IntInitializeIdtDescriptor(
 )
 {
     IdtDescriptor->IdtBase = Idt;
-    IdtDescriptor->IdtSize = sizeof(*Idt);
+    IdtDescriptor->IdtSize = sizeof(*Idt) - 1;
 
     IntLoadIdt((void*)IdtDescriptor);
 }

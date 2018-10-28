@@ -9,10 +9,12 @@ GLOBAL IntCommonISR
 IntLoadIdt:
     push rbp
     mov rbp, rsp
+    cli 
 
     call IntSetupPIC
     lidt [rcx]      ; ABI call so in rcx is first parameter
 
+    sti 
     leave
     ret
 
@@ -23,7 +25,6 @@ IntSetupPIC:
     mov rbp, rsp 
     SAVE_REGS
 
-    xchg bx, bx 
     ; SEND ICW1
     mov al, PIC_ICW1
     out PIC_MASTER_COMMAND, al 
@@ -45,6 +46,11 @@ IntSetupPIC:
 
     ; send ICW4
     mov al, PIC_ICW4
+    out PIC_MASTER_DATA, al 
+    out PIC_SLAVE_DATA,  al 
+
+    ; Mask the interrupts
+    mov al, 0
     out PIC_MASTER_DATA, al 
     out PIC_SLAVE_DATA,  al 
 
