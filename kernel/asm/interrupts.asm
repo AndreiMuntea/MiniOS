@@ -11,7 +11,7 @@ IntLoadIdt:
     SAVE_REGS 
 
     xchg bx, bx
-    lidt [rcx]      ; abi call so in rcx is first parameter
+    lidt [rcx]      ; ABI call so in rcx is first parameter
 
     RESTORE_REGS
     leave

@@ -26,6 +26,8 @@ def Assemblebootloader(AsmInputDirectory, OutputImage):
 
 def LoadKernel(KernelSourcePath, OutputImage):
     bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
+    headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
+    asm_includes    = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
     obj             = os.path.join(bin_directory, "kernel.bin")
     lnk             = ""
 
@@ -34,13 +36,11 @@ def LoadKernel(KernelSourcePath, OutputImage):
             src             = os.path.join(root, f)
             output          = os.path.join(bin_directory, f + '.obj')
             asmo            = os.path.join(bin_directory, f + '.asmo')
-            headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
-            asm_includes    = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
 
             if f.endswith(".asm"):
                 os.system('nasm -I ' + asm_includes + ' -f elf64 -O0 -o ' + output + ' ' + src)
             elif f.endswith(".c"):
-                os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 ' + src + ' -o ' + asmo + ' -Wall -masm=intel -I ' + headers)
+                os.system('cc1_x86_x64.exe -mabi=ms -std=c99 -ffreestanding -m64 -O0 ' + src + ' -o ' + asmo + ' -Wall -Werror -Wfatal-errors -masm=intel -I ' + headers)
                 os.system('as_x86_x64.exe --64 ' + asmo + ' -o ' + output + ' -msyntax=intel')
             else:
                 continue
