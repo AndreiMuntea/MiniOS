@@ -10,7 +10,9 @@ ScClearScreen(void)
         gGlobalData.ScreenData.VideoMemory[i].Character = ' ';
         gGlobalData.ScreenData.VideoMemory[i].Color = 0;
     }
-    gGlobalData.ScreenData.CurrentOffset = 0;
+
+    gGlobalData.ScreenData.CurrentColumn = 0;
+    gGlobalData.ScreenData.CurrentLine = 0;
 }
 
 void
@@ -18,12 +20,17 @@ ScPrintChar(
     char Character
 )
 {
-    UINT16 offset = gGlobalData.ScreenData.CurrentOffset;
-    BYTE color    = gGlobalData.ScreenData.Color;
+    BYTE currentLine    = gGlobalData.ScreenData.CurrentLine;
+    BYTE currentColumn  = gGlobalData.ScreenData.CurrentColumn;
+    BYTE color          = gGlobalData.ScreenData.Color;
+    UINT16 offset       = currentLine * MAX_COLUMNS + currentColumn;
 
     gGlobalData.ScreenData.VideoMemory[offset].Character = Character;
     gGlobalData.ScreenData.VideoMemory[offset].Color     = color;
-    gGlobalData.ScreenData.CurrentOffset++;
+    
+    currentColumn++;
+    gGlobalData.ScreenData.CurrentLine  += (currentColumn / MAX_COLUMNS);
+    gGlobalData.ScreenData.CurrentColumn = (currentColumn % MAX_COLUMNS);
 }
 
 void
@@ -48,7 +55,7 @@ ScPrintNumber(
 
     if (Number == 0)
     {
-        ScPrintString("0x0");
+        ScPrintChar('0');
         return;
     }
 
@@ -59,15 +66,20 @@ ScPrintNumber(
         result[size++] = UtilsHexdigitToChar(rem); 
     }
 
-    size += 2;  // for 0x
     for(BYTE i = 0, j = size - 1; i < j; ++i, --j)
     {
         UtilsSwapChars(&result[i], &result[j]);
     }
-    result[0] = '0';
-    result[1] = 'x';
 
     ScPrintString(result);
+}
+
+
+void 
+ScPrintNewLine(void)
+{
+    gGlobalData.ScreenData.CurrentLine++;
+    gGlobalData.ScreenData.CurrentColumn = 0;
 }
 
 void
@@ -98,6 +110,10 @@ ScPrint(
         case 's':
             ScPrintString(*(char**)argument);
             break;
+        case 'n':
+            ScPrintNewLine();
+            break;
         }
+        
     }
 }

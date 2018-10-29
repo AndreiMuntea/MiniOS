@@ -18,7 +18,8 @@ typedef struct _SCREEN_DATA
 {
     PSCREEN VideoMemory;
     BYTE    Color;
-    UINT16  CurrentOffset;
+    BYTE    CurrentLine;
+    BYTE    CurrentColumn;
 }SCREEN_DATA, *PSCREEN_DATA;
 #pragma pack(pop)
 
