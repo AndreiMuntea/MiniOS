@@ -4,6 +4,9 @@
 extern void 
 DebugBreak(void);
 
+extern void 
+Halt(void);
+
 extern void
 IntLoadIdt(
     void*   IdtDescriptor

@@ -66,7 +66,6 @@ IntCriticalISR:
     cli
     push rax
 
-    hlt
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al
 
