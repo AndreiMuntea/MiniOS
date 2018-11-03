@@ -6,7 +6,8 @@
 %define PDPT            102000h
 %define PDT             103000h
 %define PT              104000h
-%define FIELD_OFFSET(Structure, Field) ((Field) - (Structure))
+%define CS_SELECTOR		0x8
+%define DS_SELECTOR		0x10
 
 
 STRUC GlobalDescriptorTableEntry

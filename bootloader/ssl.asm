@@ -11,12 +11,12 @@ SecondStageLoaderEntryPoint:
     mov cr0, eax 
 
     ; Perform far jump to selector 08h (offset into GDT, pointing at code_descriptor) to load CS with proper PM32 descriptor
-    jmp FIELD_OFFSET(Gdt32, Gdt32.code_descriptor):ProtectedModeEntryPoint     
+    jmp CS_SELECTOR:ProtectedModeEntryPoint     
 
 
 [bits 32]
 ProtectedModeEntryPoint:
-    mov eax, FIELD_OFFSET(Gdt32, Gdt32.data_descriptor)
+    mov eax, DS_SELECTOR
     mov ds, ax
     mov ss, ax 
     mov es, ax 
@@ -87,12 +87,12 @@ ProtectedModeEntryPoint:
     mov cr0, eax 
 
     ; Perform far jump to selector 08h (offset into GDT, pointing at code_descriptor) to load CS with proper 64cs descriptor
-    jmp FIELD_OFFSET(Gdt64, Gdt64.code_descriptor):Realm64 
+    jmp CS_SELECTOR:Realm64 
 
 
 [bits 64]
 Realm64:
-    mov rax, FIELD_OFFSET(Gdt64, Gdt64.data_descriptor) 
+    mov rax, DS_SELECTOR
     mov ds, ax
     mov ss, ax 
     mov es, ax 
