@@ -2,6 +2,8 @@
 #define __KEYBOARD_H__
 
 void 
-KeyboardKeyPressed(char Code);
+KeyboardKeyPressed(
+    char Code
+);
 
 #endif //__KEYBOARD_H__

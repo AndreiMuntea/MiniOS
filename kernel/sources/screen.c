@@ -70,10 +70,29 @@ ScPrintNumber(
 
 
 void 
-ScPrintNewLine(void)
+ScPrintNewLine()
 {
     gGlobalData.ScreenData.CurrentLine++;
     gGlobalData.ScreenData.CurrentColumn = 0;
+}
+
+
+void
+ScEraseChar()
+{
+    if (gGlobalData.ScreenData.CurrentColumn == 0 && gGlobalData.ScreenData.CurrentLine > 0)
+    {
+        gGlobalData.ScreenData.CurrentLine--;
+        gGlobalData.ScreenData.CurrentColumn = MAX_COLUMNS;
+    }
+
+    gGlobalData.ScreenData.CurrentColumn--;
+    
+    BYTE currentLine    = gGlobalData.ScreenData.CurrentLine;
+    BYTE currentColumn  = gGlobalData.ScreenData.CurrentColumn;
+    WORD offset         = (WORD)currentLine * (WORD)MAX_COLUMNS + (WORD)currentColumn;
+
+    gGlobalData.ScreenData.VideoMemory[offset].Character = ' ';
 }
 
 void

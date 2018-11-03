@@ -1,6 +1,6 @@
+#include "screen.h"
 #include "keyboard.h"
 #include "asm_definitions.h"
-#include "screen.h"
 
 static const char gDigitsMapping[] = "1234567890";
 static const char gLettersMapping1[] = "qwertyuiop";
@@ -43,6 +43,18 @@ KeyboardKeyPressed(
         else if (Code >= 0x2C && Code <= 0x32)
         {
             character = gLettersMapping3[Code - 0x2C];   
+        }
+        else if (Code == 0x1C) // Enter
+        {
+            ScPrintNewLine();
+        }
+        else if (Code == 0xE) // Backspace
+        {
+            ScEraseChar();
+        }
+        else if (Code == 0x39) // Space
+        {
+            character = ' ';
         }
     }
 

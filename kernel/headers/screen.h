@@ -38,9 +38,15 @@ ScPrintChar(
 );
 
 void
+ScEraseChar();
+
+void
 ScPrintNumber(
     QWORD Number
 );
+
+void
+ScPrintNewLine();
 
 void
 ScPrint(
