@@ -3,9 +3,9 @@
 #include "asm_definitions.h"
 
 static const char gDigitsMapping[] = "1234567890";
-static const char gLettersMapping1[] = "qwertyuiop";
-static const char gLettersMapping2[] = "asdfghjkl";
-static const char gLettersMapping3[] = "zxcvbnm";
+static const char gLettersMappingQ_P[] = "qwertyuiop";
+static const char gLettersMappingA_L[] = "asdfghjkl";
+static const char gLettersMappingZ_M[] = "zxcvbnm";
 
 
 BOOLEAN
@@ -34,15 +34,15 @@ KeyboardKeyPressed(
         }
         else if (Code >= 0x10 && Code <= 0x19)
         {
-            character = gLettersMapping1[Code - 0x10];
+            character = gLettersMappingQ_P[Code - 0x10];
         }
         else if (Code >= 0x1E && Code <= 0x26)
         {
-            character = gLettersMapping2[Code - 0x1E];   
+            character = gLettersMappingA_L[Code - 0x1E];   
         }
         else if (Code >= 0x2C && Code <= 0x32)
         {
-            character = gLettersMapping3[Code - 0x2C];   
+            character = gLettersMappingZ_M[Code - 0x2C];   
         }
         else if (Code == 0x1C) // Enter
         {
