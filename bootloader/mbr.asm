@@ -1,7 +1,4 @@
-%define origin 7C00h
-%define ssl_origin 7E00h
-%define kernel_origin 8000h
-%define break xchg bx, bx
+%include "bootloader.inc"
 
 [bits 16]
 [org origin]

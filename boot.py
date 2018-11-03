@@ -8,6 +8,8 @@ BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
 
 
 def AssembleBootLoader():
+    includes = os.path.join(BOOTLOADER_DIRECTORY, "includes") + '\\'
+
     with open(IMAGE_FILE_PATH, 'wb') as o:
         for root, _, files in os.walk(BOOTLOADER_DIRECTORY):
             for f in files:
@@ -17,7 +19,7 @@ def AssembleBootLoader():
                 path = os.path.join(root, f) 
                 obj  = path + '.obj'
 
-                os.system('nasm -O0 -o ' + obj + ' -f bin ' + path)
+                os.system('nasm -I ' + includes + ' -O0 -o ' + obj + ' -f bin ' + path)
                 with open(obj, 'rb') as ob:
                     o.write(ob.read())
                 
