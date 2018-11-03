@@ -54,6 +54,8 @@ IntDumpTrapFrame(
     PINT_TRAP_FRAME TrapFrame
 )
 {
+    ScClearScreen();
+    ScPrint("ENCOUNTERED AN ERROR %n");
     ScPrint("RAX = 0x%x    RBX   = 0x%x %n", TrapFrame->RAX, TrapFrame->RBX);
     ScPrint("RCX = 0x%x    RDX   = 0x%x %n", TrapFrame->RCX, TrapFrame->RDX);
     ScPrint("RSI = 0x%x    RDI   = 0x%x %n", TrapFrame->RSI, TrapFrame->RDI);
