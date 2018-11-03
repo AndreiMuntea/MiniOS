@@ -103,7 +103,6 @@ ProtectedModeEntryPoint:
     mov ecx, 512 * 30
     cld 
     rep movsb
-    break
 
     ; Activating long mode
     mov eax, cr0
@@ -162,7 +161,6 @@ ProtectedModeEntryPoint:
     mov cr0, eax 
 
     ; Perform far jump to selector 08h (offset into GDT, pointing at code_descriptor) to load CS with proper 64cs descriptor
-    break
     jmp FIELD_OFFSET(Gdt64, Gdt64.code_descriptor):Realm64 
 
 GdtDescriptor64:
@@ -207,17 +205,15 @@ Realm64:
 
     mov rax, TestPagination
     call rax 
-    break;
 
     mov rax, TestPagination + 40000000h
     call rax
-    break;
 
     mov rax, TestPagination + 8000000000h
     call rax
-    break;
 
-    call kernel_base
+    mov rax, kernel_base + 8000000000h
+    call rax
 
 TestPagination:
     ret

@@ -35,14 +35,14 @@ TestTrapFrame:
     mov rbp, rsp 
     SAVE_REGS
 
-    mov r8,  0xDEADC0DE
-    mov r9,  0xDEADC0DE
-    mov r10, 0xDEADC0DE
-    mov r11, 0xDEADC0DE
-    mov r12, 0xDEADC0DE
-    mov r13, 0xDEADC0DE
-    mov r14, 0xDEADC0DE
-    mov r15, 0xDEADC0DE
+    mov r8,  0xDEADC0DEDEADC0DE
+    mov r9,  0xDEADC0DEDEADC0DE
+    mov r10, 0xDEADC0DEDEADC0DE
+    mov r11, 0xDEADC0DEDEADC0DE
+    mov r12, 0xDEADC0DEDEADC0DE
+    mov r13, 0xDEADC0DEDEADC0DE
+    mov r14, 0xDEADC0DEDEADC0DE
+    mov r15, 0xDEADC0DEDEADC0DE
 
     mov rsi, 0x123456789
     mov rdi, 0xABCDEF
