@@ -82,7 +82,7 @@ ScPrint(
     ...
 )
 {
-    BYTE argumentIndex = 0;
+    void* argument = (void*)(&Format);
 
     while(*Format != 0)
     {
@@ -94,7 +94,7 @@ ScPrint(
         }
 
         char type = *Format++;
-        void* argument = (void*)((BYTE*)(&Format) + ++argumentIndex * sizeof(void*));
+        argument = (char*)(argument) + sizeof(void*);
 
         switch (type)
         {
