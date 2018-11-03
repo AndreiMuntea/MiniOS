@@ -70,6 +70,7 @@ STRUC TRAP_FRAME
     .R13:   resq 1
     .R14:   resq 1
     .R15:   resq 1
+    .RIP:   resq 1
     .FLAGS: resq 1 
 ENDSTRUC
 
@@ -93,6 +94,10 @@ ENDSTRUC
     mov [%1 + TRAP_FRAME.R13], r13
     mov [%1 + TRAP_FRAME.R14], r14
     mov [%1 + TRAP_FRAME.R15], r15
+    
+    push QWORD [rsp]
+    pop  QWORD [%1 + TRAP_FRAME.RIP]
+
     pushf
     pop QWORD [%1 + TRAP_FRAME.FLAGS]
 %endmacro

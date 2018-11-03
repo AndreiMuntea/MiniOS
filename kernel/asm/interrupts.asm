@@ -86,18 +86,14 @@ IntSetupPIC:
 ;void IntCriticalISR(void)
 IntCriticalISR:
     cli
-    SAVE_REGS
 
     CREATE_TRAP_FRAME TrapFrame
     mov rcx, TrapFrame
     call IntDumpTrapFrame
 
+    DEBUG_BREAK
     hlt
-    
-    mov al, PIC_EOI
-    out PIC_MASTER_COMMAND, al
 
-    RESTORE_REGS
     sti 
     iretq 
 

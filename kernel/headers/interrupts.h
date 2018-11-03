@@ -52,6 +52,7 @@ typedef struct _INT_TRAP_FRAME
     QWORD R13;
     QWORD R14;
     QWORD R15;
+    QWORD RIP;
     QWORD FLAGS;
 }INT_TRAP_FRAME, *PINT_TRAP_FRAME;
 
@@ -60,7 +61,7 @@ typedef struct _INT_TRAP_FRAME
 void
 IntInitializeIdtEntry(
     PIDT_GATE_ENTRY Entry,
-    QWORD           Offset,
+    QWORD           ISR,
     WORD            Selector,
     BYTE            Flags
 );

@@ -5,7 +5,7 @@
 void
 IntInitializeIdtEntry(
     PIDT_GATE_ENTRY Entry,
-    QWORD           Offset,
+    QWORD           ISR,
     WORD            Selector,
     BYTE            Flags
 )
@@ -14,9 +14,9 @@ IntInitializeIdtEntry(
     Entry->Reserved   = 0;
     Entry->Flags      = Flags;
     Entry->Selector   = Selector;
-    Entry->OffsetLow  = (Offset & 0xFFFF);
-    Entry->OffsetMid  = (Offset & 0xFFFF0000) >> 16;
-    Entry->OffsetHigh = (Offset & 0xFFFFFFFF00000000) >> 32;
+    Entry->OffsetLow  = (ISR & 0xFFFF);
+    Entry->OffsetMid  = (ISR & 0xFFFF0000) >> 16;
+    Entry->OffsetHigh = (ISR & 0xFFFFFFFF00000000) >> 32;
 }
 
 void 
@@ -64,4 +64,5 @@ IntDumpTrapFrame(
     ScPrint("R12 = 0x%x    R13   = 0x%x %n", TrapFrame->R12, TrapFrame->R13);
     ScPrint("R14 = 0x%x    R15   = 0x%x %n", TrapFrame->R14, TrapFrame->R15);
     ScPrint("RBP = 0x%x    FLAGS = 0x%x %n", TrapFrame->RBP, TrapFrame->FLAGS);
+    ScPrint("RIP = 0x%x %n", TrapFrame->RIP);
 }
