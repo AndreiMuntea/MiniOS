@@ -92,9 +92,8 @@ IntCriticalISR:
     mov rcx, TrapFrame
     call IntDumpTrapFrame
 
-    DEBUG_BREAK
     hlt
-
+    
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al
 
