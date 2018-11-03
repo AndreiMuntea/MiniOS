@@ -5,8 +5,6 @@
 
 #define IDT_CRITICAL_ENTRIES            32
 #define IDT_MAX_ENTRIES                 256
-#define CODE_SEGMENT_DESCRIPTOR         0x8
-#define INTERRUPT_GATE_TYPE             0x8E        // P = 1b; DPL = 00b; Reserved = 0b; type = 1110b -> code | conforming | executable and readable | not accessed
 
 #pragma pack(push, 1)
 typedef struct _IDT_GATE_ENTRY
@@ -61,9 +59,7 @@ typedef struct _INT_TRAP_FRAME
 void
 IntInitializeIdtEntry(
     PIDT_GATE_ENTRY Entry,
-    QWORD           ISR,
-    WORD            Selector,
-    BYTE            Flags
+    QWORD           ISR
 );
 
 void 

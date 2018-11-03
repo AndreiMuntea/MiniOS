@@ -21,4 +21,7 @@ IntCommonISR(void);
 extern void 
 IntCriticalISR(void);
 
+extern void 
+IntKeyboardISR(void);
+
 #endif //__ASM_DEFINITIONS_H__

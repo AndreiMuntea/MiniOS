@@ -1,9 +1,13 @@
 %include "definitions.inc"
 %include "interrupts.inc"
+%include "keyboard.inc"
 
 GLOBAL IntLoadIdt
 GLOBAL IntCommonISR
 GLOBAL IntCriticalISR
+GLOBAL IntKeyboardISR
+
+extern KeyboardKeyPressed
 extern IntDumpTrapFrame
 
 
@@ -73,7 +77,7 @@ IntSetupPIC:
     out PIC_SLAVE_DATA,  al 
 
     ; Mask the interrupts
-    mov al, 0
+    mov al, 0xFD        ; Keyboard only for now
     out PIC_MASTER_DATA, al 
 
     mov al, 0xFF
@@ -101,6 +105,23 @@ IntCriticalISR:
 IntCommonISR:
     cli
     SAVE_REGS
+
+    mov al, PIC_EOI
+    out PIC_MASTER_COMMAND, al
+
+    RESTORE_REGS
+    sti 
+    iretq 
+
+; void IntKeyboardISR(void)
+IntKeyboardISR:
+    cli
+    SAVE_REGS
+
+    in al, KEYBOARD_PORT
+    
+    movzx rcx, al
+    call KeyboardKeyPressed
 
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al

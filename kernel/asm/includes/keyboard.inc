@@ -1,0 +1,1 @@
+%define KEYBOARD_PORT 0x60

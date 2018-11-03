@@ -2,18 +2,17 @@
 #include "screen.h"
 #include "asm_definitions.h"
 
+
 void
 IntInitializeIdtEntry(
     PIDT_GATE_ENTRY Entry,
-    QWORD           ISR,
-    WORD            Selector,
-    BYTE            Flags
+    QWORD           ISR
 )
 {
     Entry->Ist        = 0;         // Currently we are not using IST mechanism
     Entry->Reserved   = 0;
-    Entry->Flags      = Flags;
-    Entry->Selector   = Selector;
+    Entry->Flags      = 0x8E;        // P = 1b; DPL = 00b; Reserved = 0b; type = 1110b -> code | conforming | executable and readable | not 
+    Entry->Selector   = 0x8;
     Entry->OffsetLow  = (ISR & 0xFFFF);
     Entry->OffsetMid  = (ISR & 0xFFFF0000) >> 16;
     Entry->OffsetHigh = (ISR & 0xFFFFFFFF00000000) >> 32;
@@ -28,13 +27,15 @@ IntInitializeIdt(
 
     for(; i < IDT_CRITICAL_ENTRIES; ++i)
     {
-        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCriticalISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
+        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCriticalISR));
     }
 
     for(; i < IDT_MAX_ENTRIES; ++i)
     {
-        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCommonISR), CODE_SEGMENT_DESCRIPTOR, INTERRUPT_GATE_TYPE);
+        IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCommonISR));
     }
+
+    IntInitializeIdtEntry(&(Idt->Entries[33]), (QWORD)IntKeyboardISR);
 }
 
 void

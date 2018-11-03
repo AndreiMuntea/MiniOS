@@ -7,9 +7,8 @@ int main(void)
     InitGlobalData();
 
     ScClearScreen();
-    ScPrint("All set!%n");
-
-    TestTrapFrame();
+    
+    //TestTrapFrame();
     Halt();
     
     UninitGlobalData();
