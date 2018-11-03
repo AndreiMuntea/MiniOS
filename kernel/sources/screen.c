@@ -23,7 +23,7 @@ ScPrintChar(
     BYTE currentLine    = gGlobalData.ScreenData.CurrentLine;
     BYTE currentColumn  = gGlobalData.ScreenData.CurrentColumn;
     BYTE color          = gGlobalData.ScreenData.Color;
-    UINT16 offset       = currentLine * MAX_COLUMNS + currentColumn;
+    WORD offset         = (WORD)currentLine * (WORD)MAX_COLUMNS + (WORD)currentColumn;
 
     gGlobalData.ScreenData.VideoMemory[offset].Character = Character;
     gGlobalData.ScreenData.VideoMemory[offset].Color     = color;
@@ -49,26 +49,20 @@ ScPrintNumber(
     QWORD Number
 )
 {
-    char result[19] = {0};
+    char result[17] = {0};
     BYTE rem = 0;
-    BYTE size = 0;
+    BYTE size = 16;
 
-    if (Number == 0)
+    for (BYTE i = 0; i < size; ++i)
     {
-        ScPrintChar('0');
-        return;
+        result[i] = '0';
     }
 
     while (Number != 0)
     {
         rem = Number % 16;
         Number = Number / 16;
-        result[size++] = UtilsHexdigitToChar(rem); 
-    }
-
-    for(BYTE i = 0, j = size - 1; i < j; ++i, --j)
-    {
-        UtilsSwapChars(&result[i], &result[j]);
+        result[--size] = UtilsHexdigitToChar(rem); 
     }
 
     ScPrintString(result);

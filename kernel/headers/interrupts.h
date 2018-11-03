@@ -34,6 +34,27 @@ typedef struct _IDT_DESCRIPTOR
     WORD    IdtSize;
     PIDT    IdtBase;
 }IDT_DESCRIPTOR, *PIDT_DESCRIPTOR;
+
+typedef struct _INT_TRAP_FRAME 
+{
+    QWORD RAX;
+    QWORD RBX;
+    QWORD RCX;
+    QWORD RDX;
+    QWORD RSI;
+    QWORD RDI;
+    QWORD RBP;
+    QWORD R8;
+    QWORD R9;
+    QWORD R10;
+    QWORD R11;
+    QWORD R12;
+    QWORD R13;
+    QWORD R14;
+    QWORD R15;
+    QWORD FLAGS;
+}INT_TRAP_FRAME, *PINT_TRAP_FRAME;
+
 #pragma pack(pop)
 
 void
@@ -53,6 +74,11 @@ void
 IntInitializeIdtDescriptor(
     PIDT_DESCRIPTOR IdtDescriptor,
     PIDT            Idt
+);
+
+void 
+IntDumpTrapFrame(
+    PINT_TRAP_FRAME TrapFrame
 );
 
 #endif //__INTERRUPTS_H__

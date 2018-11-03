@@ -7,6 +7,9 @@ DebugBreak(void);
 extern void 
 Halt(void);
 
+extern void 
+TestTrapFrame(void);
+
 extern void
 IntLoadIdt(
     void*   IdtDescriptor

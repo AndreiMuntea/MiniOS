@@ -9,10 +9,7 @@ int main(void)
     ScClearScreen();
     ScPrint("All set!%n");
 
-    ScPrint("Ana are mere!%n");
-    ScPrint("0x%x 0x%x 0x%x%n", (QWORD)10, (QWORD)20, (QWORD)30);
-    ScPrint("Ana are mere!%n");
-
+    TestTrapFrame();
     Halt();
     
     UninitGlobalData();

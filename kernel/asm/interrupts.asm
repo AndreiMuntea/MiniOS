@@ -1,10 +1,32 @@
 %include "definitions.inc"
+%include "interrupts.inc"
 
 GLOBAL IntLoadIdt
 GLOBAL IntCommonISR
 GLOBAL IntCriticalISR
+extern IntDumpTrapFrame
+
 
 [Bits 64]
+
+TrapFrame: ISTRUC TRAP_FRAME
+    AT TRAP_FRAME.RAX,      dq 0
+    AT TRAP_FRAME.RBX,      dq 0
+    AT TRAP_FRAME.RCX,      dq 0
+    AT TRAP_FRAME.RDX,      dq 0
+    AT TRAP_FRAME.RSI,      dq 0
+    AT TRAP_FRAME.RDI,      dq 0
+    AT TRAP_FRAME.RBP,      dq 0
+    AT TRAP_FRAME.R8,       dq 0
+    AT TRAP_FRAME.R9,       dq 0
+    AT TRAP_FRAME.R10,      dq 0
+    AT TRAP_FRAME.R11,      dq 0
+    AT TRAP_FRAME.R12,      dq 0
+    AT TRAP_FRAME.R13,      dq 0
+    AT TRAP_FRAME.R14,      dq 0
+    AT TRAP_FRAME.R15,      dq 0
+    AT TRAP_FRAME.FLAGS,    dq 0
+IEND
 
 ; void IntLoadIdt(void* IdtDescriptor)
 IntLoadIdt:
@@ -61,26 +83,33 @@ IntSetupPIC:
     leave
     ret 
 
-; void IntCriticalISR(void)
+;void IntCriticalISR(void)
 IntCriticalISR:
     cli
-    push rax
+    SAVE_REGS
+
+    CREATE_TRAP_FRAME TrapFrame
+    mov rcx, TrapFrame
+    call IntDumpTrapFrame
+
+    DEBUG_BREAK
+    hlt
 
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al
 
-    pop rax 
+    RESTORE_REGS
     sti 
     iretq 
 
 ; void IntCommonISR(void)
 IntCommonISR:
     cli
-    push rax
+    SAVE_REGS
 
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al
 
-    pop rax 
+    RESTORE_REGS
     sti 
     iretq 
