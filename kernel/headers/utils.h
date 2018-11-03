@@ -3,18 +3,6 @@
 
 #include "definitions.h"
 
-void 
-UtilsSwapBytes(
-    BYTE* FirstByte,
-    BYTE* SecondByte
-);
-
-void 
-UtilsSwapChars(
-    char* FirstChar,
-    char* SecondChar
-);
-
 char
 UtilsHexdigitToChar(
     BYTE Hexdigit
