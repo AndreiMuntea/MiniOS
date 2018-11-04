@@ -1,5 +1,7 @@
 #include "screen.h"
 #include "keyboard.h"
+#include "global.h"
+#include "utils.h"
 #include "asm_definitions.h"
 
 static const char gDigitsMapping[]     = "1234567890";
@@ -46,6 +48,8 @@ KeyboardKeyPressed(
         }
         else if (Code == 0x1C) // Enter
         {
+            gGlobalData.KeyboardData.BufferCompleted = TRUE;
+            gGlobalData.KeyboardData.BufferSize++;
             ScPrintNewLine();
         }
         else if (Code == 0xE) // Backspace
@@ -60,6 +64,17 @@ KeyboardKeyPressed(
 
     if (character != 0)
     {
+        gGlobalData.KeyboardData.Buffer[gGlobalData.KeyboardData.BufferSize++] = character;
         ScPrintChar(character);
     }
+}
+
+void
+KeyboardResetKeyboardData(
+    PKEYBOARD_DATA KeyboardData
+)
+{
+    KeyboardData->BufferCompleted = FALSE;
+    KeyboardData->BufferSize = 0;
+    UtilsZeroMemory((char*)(&KeyboardData->Buffer), sizeof(KeyboardData->Buffer));
 }

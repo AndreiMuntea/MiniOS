@@ -1,17 +1,25 @@
 #include "global.h"
 #include "screen.h"
 #include "asm_definitions.h"
+#include "console.h"
 
 void TestTimer();
 
 int main(void)
 {
     InitGlobalData();
-
-    ScClearScreen();
     
     //TestTrapFrame();
-    TestTimer();
+    //TestTimer();
+
+    ScClearScreen();
+    ConsolePrintHelp();
+    while(TRUE)
+    {
+        ConsoleReadCommand();
+        ConsoleMatchCommand();
+        KeyboardResetKeyboardData(&gGlobalData.KeyboardData);
+    }
 
     Halt();
     

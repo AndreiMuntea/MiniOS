@@ -1,4 +1,5 @@
 #include "global.h"
+#include "utils.h"
 
  GLOBAL_DATA gGlobalData;
 
@@ -12,6 +13,8 @@ InitGlobalData(void)
 
     IntInitializeIdt(&gGlobalData.Idt);
     IntInitializeIdtDescriptor(&gGlobalData.IdtDescriptor, &gGlobalData.Idt);
+
+    KeyboardResetKeyboardData(&gGlobalData.KeyboardData);
 }
 
 void
@@ -21,4 +24,6 @@ UninitGlobalData(void)
     gGlobalData.ScreenData.CurrentColumn = 0;
     gGlobalData.ScreenData.CurrentLine   = 0;
     gGlobalData.ScreenData.Color         = 0;
+    
+    KeyboardResetKeyboardData(&gGlobalData.KeyboardData);
 }
