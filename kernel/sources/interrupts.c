@@ -35,6 +35,7 @@ IntInitializeIdt(
         IntInitializeIdtEntry(&(Idt->Entries[i]), (QWORD)(IntCommonISR));
     }
 
+    IntInitializeIdtEntry(&(Idt->Entries[32]), (QWORD)IntTimerISR);
     IntInitializeIdtEntry(&(Idt->Entries[33]), (QWORD)IntKeyboardISR);
 }
 

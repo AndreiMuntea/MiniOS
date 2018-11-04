@@ -20,7 +20,6 @@ Halt:
     push rbp 
     mov rbp, rsp 
 
-    int 49h
     ; Interrupts and exceptions can "wake" a processor from halt state
     .halt:
     hlt

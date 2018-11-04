@@ -1,0 +1,47 @@
+%include "definitions.inc"
+
+global TimerClockTick
+global TimerGetClockTicks
+global TimerSleep
+
+[Bits 64]
+ClockTicks dq 0
+
+; void TimerClockTick(void)
+TimerClockTick:
+    push rbp 
+    mov rbp, rsp 
+    
+    inc QWORD [ClockTicks]
+
+    leave 
+    ret 
+
+; QWORD TimerGetClockTicks(void)
+TimerGetClockTicks:
+    push rbp 
+    mov rbp, rsp 
+
+    mov rax, [ClockTicks]
+
+    leave 
+    ret 
+
+; void TimerSleep(QWORD Milliseconds)
+TimerSleep:
+    push rbp 
+    mov rbp, rsp 
+    SAVE_REGS
+
+    call TimerGetClockTicks     ; Initial clock ticsk 
+    mov rbx, rax 
+
+    .Sleep:
+        call TimerGetClockTicks ; Current clock ticks
+        sub rax, rbx 
+    cmp rax, rcx                ; Check if we slept enough ms
+    jnae .Sleep
+
+    RESTORE_REGS
+    leave 
+    ret 

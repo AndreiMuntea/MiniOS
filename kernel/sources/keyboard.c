@@ -2,7 +2,7 @@
 #include "keyboard.h"
 #include "asm_definitions.h"
 
-static const char gDigitsMapping[] = "1234567890";
+static const char gDigitsMapping[]     = "1234567890";
 static const char gLettersMappingQ_P[] = "qwertyuiop";
 static const char gLettersMappingA_L[] = "asdfghjkl";
 static const char gLettersMappingZ_M[] = "zxcvbnm";

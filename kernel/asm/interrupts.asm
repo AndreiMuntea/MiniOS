@@ -1,18 +1,17 @@
 %include "definitions.inc"
 %include "interrupts.inc"
-%include "keyboard.inc"
 
 GLOBAL IntLoadIdt
 GLOBAL IntCommonISR
 GLOBAL IntCriticalISR
 GLOBAL IntKeyboardISR
+GLOBAL IntTimerISR
 
 extern KeyboardKeyPressed
+extern TimerClockTick
 extern IntDumpTrapFrame
 
-
 [Bits 64]
-
 TrapFrame: ISTRUC TRAP_FRAME
     AT TRAP_FRAME.RAX,      dq 0
     AT TRAP_FRAME.RBX,      dq 0
@@ -39,6 +38,7 @@ IntLoadIdt:
     cli 
 
     call IntSetupPIC
+    call IntSetupTimer
     lidt [rcx]      ; ABI call so in rcx is first parameter
 
     sti 
@@ -77,11 +77,37 @@ IntSetupPIC:
     out PIC_SLAVE_DATA,  al 
 
     ; Mask the interrupts
-    mov al, 0xFD        ; Keyboard only for now
+    mov al, 0xFC        ; Keyboard and Timer 
     out PIC_MASTER_DATA, al 
 
     mov al, 0xFF
     out PIC_SLAVE_DATA,  al 
+
+    RESTORE_REGS
+    leave
+    ret 
+
+; void IntSetupTimer(void)
+IntSetupTimer:
+    push rbp 
+    mov rbp, rsp 
+    SAVE_REGS
+
+    mov al, 0x36    ; SQUARE-WAVE mode | 16 bit counter | lobyte and hibyte
+    out TIMER_COMMAND_PORT, al 
+
+    ; calculate divisor
+    xor rdx, rdx 
+    mov rax, TIMER_BASE_FREQUENCY
+    mov rbx, TIMER_DESIRED_FREQUENCY
+    div rbx 
+
+    ; Send low byte
+    out TIMER_CHANNEL0_PORT, al 
+    
+    ; Send high byte
+    rol ax, 8 
+    out TIMER_CHANNEL0_PORT, al 
 
     RESTORE_REGS
     leave
@@ -122,6 +148,20 @@ IntKeyboardISR:
     
     movzx rcx, al
     call KeyboardKeyPressed
+
+    mov al, PIC_EOI
+    out PIC_MASTER_COMMAND, al
+
+    RESTORE_REGS
+    sti 
+    iretq 
+
+; void IntTimerISR(void)
+IntTimerISR:
+    cli
+    SAVE_REGS
+
+    call TimerClockTick
 
     mov al, PIC_EOI
     out PIC_MASTER_COMMAND, al

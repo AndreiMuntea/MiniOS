@@ -24,4 +24,10 @@ IntCriticalISR(void);
 extern void 
 IntKeyboardISR(void);
 
+extern void 
+IntTimerISR(void);
+
+extern void 
+TimerSleep(unsigned long long Milliseconds);
+
 #endif //__ASM_DEFINITIONS_H__

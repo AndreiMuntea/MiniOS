@@ -80,7 +80,12 @@ ScPrintNewLine()
 void
 ScEraseChar()
 {
-    if (gGlobalData.ScreenData.CurrentColumn == 0 && gGlobalData.ScreenData.CurrentLine > 0)
+    if (gGlobalData.ScreenData.CurrentColumn == 0 && gGlobalData.ScreenData.CurrentLine == 0)
+    {
+        return;
+    }
+
+    if (gGlobalData.ScreenData.CurrentColumn == 0)
     {
         gGlobalData.ScreenData.CurrentLine--;
         gGlobalData.ScreenData.CurrentColumn = MAX_COLUMNS;

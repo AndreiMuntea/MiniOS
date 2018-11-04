@@ -21,6 +21,17 @@
 
 %define PIC_EOI		    0x20	
 
+%define KEYBOARD_PORT   0x60
+
+%define TIMER_DESIRED_FREQUENCY 100
+
+%define TIMER_BASE_FREQUENCY    1193180
+
+%define TIMER_COMMAND_PORT      0x43
+
+; CHANNEL 0 port is bounded to IRQ0
+%define TIMER_CHANNEL0_PORT     0x40   
+
 
 ; ICW - initialization command word
 
