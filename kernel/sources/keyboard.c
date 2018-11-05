@@ -1,7 +1,5 @@
-#include "screen.h"
 #include "keyboard.h"
-#include "global.h"
-#include "utils.h"
+#include "console.h"
 #include "asm_definitions.h"
 
 static const char gDigitsMapping[]     = "1234567890";
@@ -24,7 +22,7 @@ KeyboardKeyPressed(
 )
 {
     char character = 0;
-    if (KeyboardIsKeyReleased(Code))
+    if (!ConsoleIsReceivingInput() || KeyboardIsKeyReleased(Code))
     {
         return;
     }
@@ -48,13 +46,11 @@ KeyboardKeyPressed(
         }
         else if (Code == 0x1C) // Enter
         {
-            gGlobalData.KeyboardData.BufferCompleted = TRUE;
-            gGlobalData.KeyboardData.BufferSize++;
-            ScPrintNewLine();
+            ConsoleSignalEndOfCommand();
         }
         else if (Code == 0xE) // Backspace
         {
-            ScEraseChar();
+            ConsoleEraseLastCharacterCommandBuffer();
         }
         else if (Code == 0x39) // Space
         {
@@ -64,17 +60,6 @@ KeyboardKeyPressed(
 
     if (character != 0)
     {
-        gGlobalData.KeyboardData.Buffer[gGlobalData.KeyboardData.BufferSize++] = character;
-        ScPrintChar(character);
+        ConsolePutCharCommandBuffer(character);
     }
-}
-
-void
-KeyboardResetKeyboardData(
-    PKEYBOARD_DATA KeyboardData
-)
-{
-    KeyboardData->BufferCompleted = FALSE;
-    KeyboardData->BufferSize = 0;
-    UtilsZeroMemory((char*)(&KeyboardData->Buffer), sizeof(KeyboardData->Buffer));
 }

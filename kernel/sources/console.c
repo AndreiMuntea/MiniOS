@@ -15,28 +15,105 @@ ConsolePrintHelp(void)
 void
 ConsoleReadCommand(void)
 {
+    ScClearScreen();
+    ConsolePrintHelp();
     ScPrint("Your command: ");
-    while(!gGlobalData.KeyboardData.BufferCompleted)
+
+    ConsoleResetCommandBuffer();
+    ConsoleSignalStartOfCommand();
+    while(ConsoleIsReceivingInput())
     {
-        TimerSleep(500);
+
     }
 }
 
 void
 ConsoleMatchCommand(void)
 {
-    if (UtilsAreStringsEqual("trapframe", sizeof("trapframe"), gGlobalData.KeyboardData.Buffer, gGlobalData.KeyboardData.BufferSize))
+    ScClearScreen();
+    if (UtilsAreStringsEqual("trapframe", sizeof("trapframe"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
     {
-        ScPrint("WOOOHOOO11111");
+        ConsoleTrapFrameCommand();
     }
-    else if (UtilsAreStringsEqual("timer", sizeof("timer"), gGlobalData.KeyboardData.Buffer, gGlobalData.KeyboardData.BufferSize))
+    else if (UtilsAreStringsEqual("timer", sizeof("timer"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
     {
-        ScPrint("WOOHOOOO2222");
+        ConsoleTimerCommand();
     }
     else
     {
-        ScClearScreen();
         ScPrint("Invalid command!%n");
         ConsolePrintHelp();
     }
+}
+
+void 
+ConsoleResetCommandBuffer()
+{
+    gGlobalData.ConsoleData.IsReceivingInput    = FALSE;
+    gGlobalData.ConsoleData.CommandBufferCursor = 0;
+    UtilsZeroMemory(gGlobalData.ConsoleData.CommandBuffer, sizeof(gGlobalData.ConsoleData.CommandBuffer));
+}
+
+
+void
+ConsolePutCharCommandBuffer(
+    char Character
+)
+{
+    if (gGlobalData.ConsoleData.CommandBufferCursor == sizeof(gGlobalData.ConsoleData.CommandBuffer))
+    {
+        return;
+    }
+
+    gGlobalData.ConsoleData.CommandBuffer[gGlobalData.ConsoleData.CommandBufferCursor++] = Character;
+    ScPrintChar(Character);
+}
+
+void
+ConsoleEraseLastCharacterCommandBuffer()
+{
+    if (gGlobalData.ConsoleData.CommandBufferCursor == 0)
+    {
+        return;
+    }
+    
+    gGlobalData.ConsoleData.CommandBuffer[--gGlobalData.ConsoleData.CommandBufferCursor] = '\0';
+    ScEraseChar();
+}
+
+
+BOOLEAN
+ConsoleIsReceivingInput()
+{
+    return gGlobalData.ConsoleData.IsReceivingInput;
+}
+
+
+void
+ConsoleSignalEndOfCommand()
+{
+    ConsolePutCharCommandBuffer(0);
+    gGlobalData.ConsoleData.IsReceivingInput = FALSE;
+}
+
+
+void
+ConsoleSignalStartOfCommand()
+{
+    gGlobalData.ConsoleData.IsReceivingInput = TRUE;   
+}
+
+void 
+ConsoleTrapFrameCommand()
+{
+    TestTrapFrame();
+}
+
+void
+ConsoleTimerCommand()
+{
+    ScPrint("Now we are sleeping 3 seconds...%n");
+    TimerSleep(3000);
+    ScPrint("Done sleeping!%n");
+    TimerSleep(1000);
 }

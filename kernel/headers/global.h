@@ -2,7 +2,7 @@
 #define __GLOBAL_H__
 
 #include "screen.h"
-#include "keyboard.h"
+#include "console.h"
 #include "definitions.h"
 #include "interrupts.h"
 
@@ -12,7 +12,7 @@ typedef struct _GLOBAL_DATA
     SCREEN_DATA     ScreenData;
     IDT             Idt;
     IDT_DESCRIPTOR  IdtDescriptor;
-    KEYBOARD_DATA   KeyboardData;
+    CONSOLE_DATA    ConsoleData;
 }GLOBAL_DATA, *PGLOBAL_DATA;
 #pragma pack(pop)
 

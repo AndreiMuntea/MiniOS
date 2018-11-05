@@ -1,10 +1,10 @@
 import os
 
 
-BOOTLOADER_DIRECTORY = os.path.join(os.getcwd(), "bootloader")
-IMAGE_FILE_PATH = os.path.join(os.getcwd(), "bin", "image.bin")
+BOOTLOADER_DIRECTORY         = os.path.join(os.getcwd(), "bootloader")
+IMAGE_FILE_PATH              = os.path.join(os.getcwd(), "bin", "image.bin")
 KERNEL_SOURCE_PATH_DIRECTORY = os.path.join(os.getcwd(), "kernel")
-BOSCH_CFG_FILE_PATH = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
+BOSCH_CFG_FILE_PATH          = os.path.join(os.getcwd(), "bochs", "mini-os.bxrc")
 
 
 def AssembleBootLoader():
@@ -22,22 +22,21 @@ def AssembleBootLoader():
                 os.system('nasm -I ' + includes + ' -O0 -o ' + obj + ' -f bin ' + path)
                 with open(obj, 'rb') as ob:
                     o.write(ob.read())
-                
                 os.unlink(obj)
 
 
 def LoadKernel():
-    bin_directory   = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
-    headers         = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
-    asm_includes    = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
-    obj             = os.path.join(bin_directory, "kernel.bin")
-    lnk             = ""
+    bin_directory = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "bin")
+    headers       = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "headers")
+    asm_includes  = os.path.join(KERNEL_SOURCE_PATH_DIRECTORY, "asm", "includes") + '\\'
+    obj           = os.path.join(bin_directory, "kernel.bin")
+    lnk           = ""
 
     for root, _, files in os.walk(KERNEL_SOURCE_PATH_DIRECTORY):
         for f in files:
-            src             = os.path.join(root, f)
-            output          = os.path.join(bin_directory, f + '.obj')
-            asmo            = os.path.join(bin_directory, f + '.asmo')
+            src    = os.path.join(root, f)
+            output = os.path.join(bin_directory, f + '.obj')
+            asmo   = os.path.join(bin_directory, f + '.asmo')
 
             if f.endswith(".asm"):
                 os.system('nasm -I ' + asm_includes + ' -f elf64 -O0 -o ' + output + ' ' + src)
@@ -56,9 +55,9 @@ def LoadKernel():
 
 
 def AddPadding():
-    diskSize = 33554432  # 32 mb
+    diskSize   = 33554432  # 32 mb
     actualSize = os.path.getsize(IMAGE_FILE_PATH)
-    padding = '\0' * (diskSize - actualSize)
+    padding    = '\0' * (diskSize - actualSize)
 
     with open(IMAGE_FILE_PATH, 'ab') as f:
         f.write(padding)

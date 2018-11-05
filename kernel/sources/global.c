@@ -14,7 +14,7 @@ InitGlobalData(void)
     IntInitializeIdt(&gGlobalData.Idt);
     IntInitializeIdtDescriptor(&gGlobalData.IdtDescriptor, &gGlobalData.Idt);
 
-    KeyboardResetKeyboardData(&gGlobalData.KeyboardData);
+    ConsoleResetCommandBuffer();
 }
 
 void
@@ -25,5 +25,5 @@ UninitGlobalData(void)
     gGlobalData.ScreenData.CurrentLine   = 0;
     gGlobalData.ScreenData.Color         = 0;
     
-    KeyboardResetKeyboardData(&gGlobalData.KeyboardData);
+    ConsoleResetCommandBuffer();
 }
