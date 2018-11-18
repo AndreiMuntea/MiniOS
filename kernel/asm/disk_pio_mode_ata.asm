@@ -8,7 +8,7 @@ GLOBAL DiskReadSector
 ; This routine will read 1 sector (512 bytes) from specified Head and Cylinder
 ; void DiskReadSector(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer)
 ;=============================================================================
-DiskReadSector
+DiskReadSector:
     push rbp 
     mov rbp, rsp 
     SAVE_REGS
@@ -18,30 +18,36 @@ DiskReadSector
     ; Head         = R8
     ; OutputBuffer = R9
 
+    xchg rbx, rdx   ; we will use dx for port register
+
     ; Write any required parameters to the Features, Sector Count, Sector Number, Cylinder and Drive/Head registers.
 
 
     ; SECTOR COUNT register  port:  0x1F2
     ; This register specifies the number of sectors of data to be transferred during read/write sector commands
     ; We will read one sector
-    mov al,   1
-    out 1F2h, al
+    mov al, 1
+    mov dx, 1F2h
+    out dx, al
     
     ; SECTOR NUMBER register  port:  0x1F3
     ; This register contains the starting sector number for any disc access
-    mov rax,  rdx 
-    out 1F3h, al
+    mov rax, rbx 
+    mov dx,  1F3h
+    out dx,  al
 
     ; CYLINDER LOW register port:  0x1F4
     ; This register contains the eight least significant bits of the starting cylinder address for any disc access
-    mov rax,  rcx
-    out 1F4h, al
+    mov rax, rcx
+    mov dx,  1F4h
+    out dx,  al
 
     ; CYLINDER HIGH register port:  0x1F5
     ; This register contains the most significant bits of the starting cylinder address for any disc access
-    mov rax,  rcx
+    mov  rax, rcx
     xchg al,  ah
-    out 1F4h, al
+    mov  dx,  1F4h
+    out  dx,  al
 
     ; DRIVE/HEAD register  port:  0x1F6
     ; |1|x|1|x|x|x|x|x|
@@ -50,9 +56,10 @@ DiskReadSector
     ;  | | |-------------- RESERVED  - must be 1
     ;  | |---------------- LBA       - LBA (logical block address) for 1, CHS for 0
     ;  |------------------ RESERVED  - must be 1
-    mov rax,  r8         
-    or  al,   10100000b   ; Master DRV | CHS mode 
-    out 1F6h, al          
+    mov rax, r8         
+    or  al,  10100000b   ; Master DRV | CHS mode 
+    mov dx,  1F6h
+    out dx,  al          
 
 
     ; Write the command code to the Command register.
@@ -60,7 +67,8 @@ DiskReadSector
     ; COMMAND register  port:  0x1F7        !WRITE ONLY!
     ; This eight-bit register contains the host command. When this register is written, the drive immediately begins executing the command
     mov al, 20h ; Read Sectors (w/retry)
-    out 1F7h, al
+    mov dx, 1F7h
+    out dx, al
 
     ; Now The drive sets BSY and prepares for data transfer. When the drive is ready to accept a block of data, it sets DRQ and clears BSY. When the host detects DRQ is set to 1, the host writes one block of data from the Data register.
 
@@ -78,7 +86,8 @@ DiskReadSector
     
     ; Wait for completion
     .checkBusy:
-    in al, 1F7h
+    mov  dx, 1F7h 
+    in   al, dx 
     test al, 8
     jz .checkBusy
 
