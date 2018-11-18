@@ -15,7 +15,7 @@ DiskReadSector:
     SAVE_REGS
 
     push QWORD 20h  ; Read Sectors (w/retry)
-    call DiskExecuteCommand
+    call DiskIOSector
     pop rax
          
     ; DATA register  port:  0x1F0 
@@ -36,7 +36,7 @@ DiskWriteSector:
     SAVE_REGS
 
     push QWORD 30h  ; Write Sectors (w/retry)
-    call DiskExecuteCommand
+    call DiskIOSector
     pop rax
          
     ; DATA register  port:  0x1F0 
@@ -51,8 +51,8 @@ DiskWriteSector:
     ret 
 
 
-; void DiskExecuteCommand(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer, BYTE Command)
-DiskExecuteCommand:
+; void DiskIOSector(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer, BYTE Command)
+DiskIOSector:
     push rbp 
     mov rbp, rsp 
     SAVE_REGS
