@@ -43,6 +43,9 @@ ConsoleTimerCommand();
 void
 ConsoleReadDiskCommand();
 
+void
+ConsoleWriteDiskCommand();
+
 BOOLEAN
 ConsoleIsReceivingInput();
 

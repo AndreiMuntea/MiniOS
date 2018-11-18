@@ -10,7 +10,8 @@ ConsolePrintHelp(void)
     ScPrint("Available commands:%n");
     ScPrint("    > trapframe - Generates a division by 0 exception:%n");
     ScPrint("    > timer     - Prints 2 consecutive delayed messages:%n");
-    ScPrint("    > readdisk  - Reads last sector from disk. Special sector:%n");
+    ScPrint("    > writedisk - Writes last sector from disk:%n");
+    ScPrint("    > readdisk  - Reads last sector from disk:%n");
 }
 
 void
@@ -37,6 +38,10 @@ ConsoleMatchCommand(void)
     else if (UtilsAreStringsEqual("timer", sizeof("timer"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
     {
         ConsoleTimerCommand();
+    }
+    else if (UtilsAreStringsEqual("writedisk", sizeof("writedisk"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
+    {
+        ConsoleWriteDiskCommand();
     }
     else if (UtilsAreStringsEqual("readdisk", sizeof("readdisk"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
     {
@@ -138,7 +143,20 @@ ConsoleReadDiskCommand()
     {
         ScPrintChar((BYTE)(buffer[k]));
     }
+
     TimerSleep(5000);
     ScClearScreen();
+}
 
+void
+ConsoleWriteDiskCommand()
+{
+    // cylinders=0..127, heads=0..15, sectors=1..32
+
+    char  buffer[512] = {"THIS IS THE LAST SECTOR! I DID IT! WOOOHOOOOO! FILLING WITH RANDOM CHARACTERS! BLA BLA BLA BLA"};
+    short cylinder    = 127;
+    char  sectorIndex = 32;
+    char  head        = 15;
+
+    DiskWriteSector(cylinder, sectorIndex, head, buffer);
 }

@@ -40,4 +40,12 @@ DiskReadSector(
     char*  OutputBuffer
 );
 
+extern void 
+DiskWriteSector(
+    short  Cylinder, 
+    char   SectorIndex, 
+    char   Head, 
+    char*  InputBuffer
+);
+
 #endif //__ASM_DEFINITIONS_H__

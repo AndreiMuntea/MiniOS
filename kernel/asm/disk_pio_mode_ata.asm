@@ -1,18 +1,63 @@
 %include "definitions.inc"
 
 GLOBAL DiskReadSector
+GLOBAL DiskWriteSector
 
-[Bits 64]
 ;=============================================================================
 ; Our disk configuration: cylinders=128, heads=16, sectors=32
-; This routine will read 1 sector (512 bytes) from specified Head and Cylinder
-; void DiskReadSector(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer)
 ;=============================================================================
+
+[Bits 64]
+; void DiskReadSector(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer)
 DiskReadSector:
     push rbp 
     mov rbp, rsp 
     SAVE_REGS
 
+    push QWORD 20h  ; Read Sectors (w/retry)
+    call DiskExecuteCommand
+    pop rax
+         
+    ; DATA register  port:  0x1F0 
+    ; The host can only access this register when the DRQ bit in the status register is set to 1. All transfers use 16-bit words 
+    mov rcx, 256    ; no words read
+    mov rdx, 1F0h   
+    mov rdi, r9     ; destination bufer
+    rep insw        ; input from port to string 
+
+    RESTORE_REGS
+    leave
+    ret 
+
+; void DiskWriteSector(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* InputBuffer)
+DiskWriteSector:
+    push rbp 
+    mov rbp, rsp 
+    SAVE_REGS
+
+    push QWORD 30h  ; Write Sectors (w/retry)
+    call DiskExecuteCommand
+    pop rax
+         
+    ; DATA register  port:  0x1F0 
+    ; The host can only access this register when the DRQ bit in the status register is set to 1. All transfers use 16-bit words 
+    mov rcx, 256    ; no words to write
+    mov rdx, 1F0h   
+    mov rsi, r9     ; input bufer
+    rep outsw       ; output from string to port
+
+    RESTORE_REGS
+    leave
+    ret 
+
+
+; void DiskExecuteCommand(WORD Cylinder, BYTE SectorIndex, BYTE Head, BYTE* OutputBuffer, BYTE Command)
+DiskExecuteCommand:
+    push rbp 
+    mov rbp, rsp 
+    SAVE_REGS
+
+    ; Command      = [rbp + 16]
     ; Cylinder     = RCX
     ; SectorIndex  = RDX
     ; Head         = R8
@@ -37,7 +82,6 @@ DiskReadSector:
 
     ; SECTOR COUNT register  port:  0x1F2
     ; This register specifies the number of sectors of data to be transferred during read/write sector commands
-    ; We will read one sector
     mov al, 1
     mov dx, 1F2h
     out dx, al
@@ -60,12 +104,10 @@ DiskReadSector:
     xchg al,  ah
     mov  dx,  1F5h
     out  dx,  al
-         
-    ; Write the command code to the Command register.
 
     ; COMMAND register  port:  0x1F7        !WRITE ONLY!
     ; This eight-bit register contains the host command. When this register is written, the drive immediately begins executing the command
-    mov al, 20h ; Read Sectors (w/retry)
+    mov rax, [rbp + 16] 
     mov dx, 1F7h
     out dx, al
 
@@ -90,12 +132,6 @@ DiskReadSector:
     test al, 8
     jz .checkBusy
 
-    ; DATA register  port:  0x1F0 
-    ; The host can only access this register when the DRQ bit in the status register is set to 1. All transfers use 16-bit words 
-    mov rcx, 256    ; no words read
-    mov rdx, 1F0h   
-    mov rdi, r9     ; destination bufer
-    rep insw        ; input from port to string 
 
     RESTORE_REGS
     leave
