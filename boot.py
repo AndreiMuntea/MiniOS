@@ -53,14 +53,14 @@ def LoadKernel():
         with open(obj, 'rb') as p:
             o.write(p.read())
 
-
 def AddPadding():
     diskSize   = 33554432  # 32 mb
     actualSize = os.path.getsize(IMAGE_FILE_PATH)
-    padding    = '\0' * (diskSize - actualSize)
+    padding    = '\0' * (diskSize - actualSize - 512)
 
     with open(IMAGE_FILE_PATH, 'ab') as f:
         f.write(padding)
+        f.write(512 * 'a')
 
 
 def StartBochs():

@@ -10,6 +10,7 @@ ConsolePrintHelp(void)
     ScPrint("Available commands:%n");
     ScPrint("    > trapframe - Generates a division by 0 exception:%n");
     ScPrint("    > timer     - Prints 2 consecutive delayed messages:%n");
+    ScPrint("    > readdisk  - Reads last sector from disk. Special sector:%n");
 }
 
 void
@@ -37,10 +38,15 @@ ConsoleMatchCommand(void)
     {
         ConsoleTimerCommand();
     }
+    else if (UtilsAreStringsEqual("readdisk", sizeof("readdisk"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
+    {
+        ConsoleReadDiskCommand();
+    }
     else
     {
         ScPrint("Invalid command!%n");
         ConsolePrintHelp();
+        TimerSleep(1000);
     }
 }
 
@@ -114,4 +120,25 @@ ConsoleTimerCommand()
     TimerSleep(3000);
     ScPrint("Done sleeping!%n");
     TimerSleep(1000);
+}
+
+void
+ConsoleReadDiskCommand()
+{
+    // cylinders=0..127, heads=0..15, sectors=1..32
+
+    char  buffer[512] = {0};
+    short cylinder    = 127;
+    char  sectorIndex = 32;
+    char  head        = 15;
+
+    DiskReadSector(cylinder, sectorIndex, head, buffer);
+
+    for(int k = 0; k < sizeof(buffer); ++k)
+    {
+        ScPrintChar((BYTE)(buffer[k]));
+    }
+    TimerSleep(5000);
+    ScClearScreen();
+
 }

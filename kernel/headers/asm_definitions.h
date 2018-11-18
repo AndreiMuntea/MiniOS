@@ -28,6 +28,16 @@ extern void
 IntTimerISR(void);
 
 extern void 
-TimerSleep(unsigned long long Milliseconds);
+TimerSleep(
+    unsigned long long Milliseconds
+);
+
+extern void 
+DiskReadSector(
+    short  Cylinder, 
+    char   SectorIndex, 
+    char   Head, 
+    char*  OutputBuffer
+);
 
 #endif //__ASM_DEFINITIONS_H__

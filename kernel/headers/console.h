@@ -37,7 +37,11 @@ ConsoleSignalStartOfCommand();
 void 
 ConsoleTrapFrameCommand();
 
-void ConsoleTimerCommand();
+void
+ConsoleTimerCommand();
+
+void
+ConsoleReadDiskCommand();
 
 BOOLEAN
 ConsoleIsReceivingInput();

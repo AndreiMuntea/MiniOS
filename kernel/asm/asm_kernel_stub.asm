@@ -5,6 +5,8 @@ KernelStub:
     push rbp 
     mov rbp, rsp 
 
+    mov rbp, 150000h
+    mov rsp, rbp 
     call main
     
     hlt

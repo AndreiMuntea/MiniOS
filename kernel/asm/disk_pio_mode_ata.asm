@@ -18,10 +18,22 @@ DiskReadSector:
     ; Head         = R8
     ; OutputBuffer = R9
 
-    xchg rbx, rdx   ; we will use dx for port register
+    mov rbx, rdx   ; we will use dx for port register
+    xor rdx, rdx
+
+    ; DRIVE/HEAD register  port:  0x1F6
+    ; |1|x|1|x|x|x|x|x|
+    ;  | | | | +---------- HEAD      - is the 4-bit address used to select the head
+    ;  | | | |------------ DRV       - the bit used to select the drive. Master is 0. Slave is 1
+    ;  | | |-------------- RESERVED  - must be 1
+    ;  | |---------------- LBA       - LBA (logical block address) for 1, CHS for 0
+    ;  |------------------ RESERVED  - must be 1
+    mov rax, r8         
+    or  al,  10100000b   ; Master DRV | CHS mode 
+    mov dx,  1F6h
+    out dx,  al 
 
     ; Write any required parameters to the Features, Sector Count, Sector Number, Cylinder and Drive/Head registers.
-
 
     ; SECTOR COUNT register  port:  0x1F2
     ; This register specifies the number of sectors of data to be transferred during read/write sector commands
@@ -46,22 +58,9 @@ DiskReadSector:
     ; This register contains the most significant bits of the starting cylinder address for any disc access
     mov  rax, rcx
     xchg al,  ah
-    mov  dx,  1F4h
+    mov  dx,  1F5h
     out  dx,  al
-
-    ; DRIVE/HEAD register  port:  0x1F6
-    ; |1|x|1|x|x|x|x|x|
-    ;  | | | | +---------- HEAD      - is the 4-bit address used to select the head
-    ;  | | | |------------ DRV       - the bit used to select the drive. Master is 0. Slave is 1
-    ;  | | |-------------- RESERVED  - must be 1
-    ;  | |---------------- LBA       - LBA (logical block address) for 1, CHS for 0
-    ;  |------------------ RESERVED  - must be 1
-    mov rax, r8         
-    or  al,  10100000b   ; Master DRV | CHS mode 
-    mov dx,  1F6h
-    out dx,  al          
-
-
+         
     ; Write the command code to the Command register.
 
     ; COMMAND register  port:  0x1F7        !WRITE ONLY!
