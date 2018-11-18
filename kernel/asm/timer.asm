@@ -5,14 +5,14 @@ global TimerGetClockTicks
 global TimerSleep
 
 [Bits 64]
-ClockTicks dq 0
+gClockTicks dq 0
 
 ; void TimerClockTick(void)
 TimerClockTick:
     push rbp 
     mov rbp, rsp 
     
-    inc QWORD [ClockTicks]
+    lock inc QWORD [gClockTicks]
 
     leave 
     ret 
@@ -22,7 +22,7 @@ TimerGetClockTicks:
     push rbp 
     mov rbp, rsp 
 
-    mov rax, [ClockTicks]
+    mov rax, [gClockTicks]
 
     leave 
     ret 
@@ -33,7 +33,7 @@ TimerSleep:
     mov rbp, rsp 
     SAVE_REGS
 
-    call TimerGetClockTicks     ; Initial clock ticsk 
+    call TimerGetClockTicks     ; Initial clock ticks
     mov rbx, rax 
 
     .Sleep:

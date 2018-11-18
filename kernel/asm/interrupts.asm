@@ -12,7 +12,7 @@ extern TimerClockTick
 extern IntDumpTrapFrame
 
 [Bits 64]
-TrapFrame: ISTRUC TRAP_FRAME
+gTrapFrame: ISTRUC TRAP_FRAME
     AT TRAP_FRAME.RAX,      dq 0
     AT TRAP_FRAME.RBX,      dq 0
     AT TRAP_FRAME.RCX,      dq 0
@@ -77,7 +77,7 @@ IntSetupPIC:
     out PIC_SLAVE_DATA,  al 
 
     ; Mask the interrupts
-    mov al, 0xFC        ; Keyboard and Timer 
+    mov al, 0xFC        ; Keyboard and Timer enabled
     out PIC_MASTER_DATA, al 
 
     mov al, 0xFF
@@ -117,8 +117,8 @@ IntSetupTimer:
 IntCriticalISR:
     cli
 
-    CREATE_TRAP_FRAME TrapFrame
-    mov rcx, TrapFrame
+    CREATE_TRAP_FRAME gTrapFrame
+    mov rcx, gTrapFrame
     call IntDumpTrapFrame
 
     DEBUG_BREAK

@@ -17,8 +17,8 @@ typedef unsigned int            UINT32;
 typedef unsigned long long      UINT64;
 
 typedef char                    BOOLEAN;
-#define FALSE                    (0)
-#define TRUE                     (!FALSE)
+#define FALSE                   (0)
+#define TRUE                    (!FALSE)
 
 #define CHR_MIN       (-128)                            // maximum (signed) char value
 #define CHR_MAX       (127)                             // maximum (signed) char value

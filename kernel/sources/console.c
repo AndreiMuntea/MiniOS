@@ -21,10 +21,8 @@ ConsoleReadCommand(void)
 
     ConsoleResetCommandBuffer();
     ConsoleSignalStartOfCommand();
-    while(ConsoleIsReceivingInput())
-    {
-
-    }
+    while(ConsoleIsReceivingInput());
+    
 }
 
 void

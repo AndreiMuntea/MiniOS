@@ -11,7 +11,7 @@ IntInitializeIdtEntry(
 {
     Entry->Ist        = 0;         // Currently we are not using IST mechanism
     Entry->Reserved   = 0;
-    Entry->Flags      = 0x8E;        // P = 1b; DPL = 00b; Reserved = 0b; type = 1110b -> code | conforming | executable and readable | not 
+    Entry->Flags      = 0x8E;        // P = 1b; DPL = 00b; Reserved = 0b; type = 1110b -> code | conforming | executable and readable | not accessed
     Entry->Selector   = 0x8;
     Entry->OffsetLow  = (ISR & 0xFFFF);
     Entry->OffsetMid  = (ISR & 0xFFFF0000) >> 16;
