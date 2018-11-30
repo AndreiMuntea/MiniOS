@@ -57,12 +57,12 @@ DiskIOSector:
     mov rbp, rsp 
     SAVE_REGS
 
-    ; Command      = [rbp + 16]
     ; Cylinder     = RCX
     ; SectorIndex  = RDX
     ; Head         = R8
     ; OutputBuffer = R9
-
+    ; Command      = [rbp + 16]
+    
     mov rbx, rdx   ; we will use dx for port register
     xor rdx, rdx
 

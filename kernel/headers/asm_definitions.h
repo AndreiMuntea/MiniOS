@@ -48,4 +48,16 @@ DiskWriteSector(
     char*  InputBuffer
 );
 
+extern void
+MemInit();
+
+extern void
+MemUninit();
+
+extern void*
+MemAllocPage();
+
+extern void
+MemFreePage(BYTE PageIndex);
+
 #endif //__ASM_DEFINITIONS_H__

@@ -83,7 +83,7 @@ ProtectedModeEntryPoint:
     lgdt [GdtDescriptor64]    ; Load GDT register with start address of Global Descriptor Table
 
     mov eax, cr0
-    or eax, (1 << 31) | 1  ; Enable paging (set CR0.PG bit - bit 31 and CR0.PM bit - bit 0)  
+    or eax, (1 << 31) | 1     ; Enable paging (set CR0.PG bit - bit 31 and CR0.PM bit - bit 0)  
     mov cr0, eax 
 
     ; Perform far jump to selector 08h (offset into GDT, pointing at code_descriptor) to load CS with proper 64cs descriptor

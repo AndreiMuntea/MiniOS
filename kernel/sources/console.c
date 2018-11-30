@@ -8,10 +8,10 @@ void
 ConsolePrintHelp(void)
 {
     ScPrint("Available commands:%n");
-    ScPrint("    > trapframe - Generates a division by 0 exception:%n");
-    ScPrint("    > timer     - Prints 2 consecutive delayed messages:%n");
-    ScPrint("    > writedisk - Writes last sector from disk:%n");
-    ScPrint("    > readdisk  - Reads last sector from disk:%n");
+    ScPrint("    > trapframe - Generates a division by 0 exception%n");
+    ScPrint("    > timer     - Prints 2 consecutive delayed messages%n");
+    ScPrint("    > writedisk - Writes last sector from disk%n");
+    ScPrint("    > readdisk  - Reads last sector from disk%n");
 }
 
 void
