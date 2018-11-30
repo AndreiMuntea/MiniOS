@@ -7,9 +7,9 @@
 #pragma pack(push, 1)
 typedef struct _CONSOLE_DATA
 {
-    BOOLEAN IsReceivingInput;
-    UINT16  CommandBufferCursor;
-    char    CommandBuffer[MAX_OFFSET];
+	BOOLEAN IsReceivingInput;
+	UINT16  CommandBufferCursor;
+	char    CommandBuffer[MAX_OFFSET];
 }CONSOLE_DATA, *PCONSOLE_DATA;
 #pragma pack(pop)
 
@@ -51,7 +51,7 @@ ConsoleIsReceivingInput();
 
 void
 ConsolePutCharCommandBuffer(
-    char Character
+	char Character
 );
 
 #endif //__CONSOLE_H__

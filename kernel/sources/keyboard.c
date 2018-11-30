@@ -10,56 +10,56 @@ static const char gLettersMappingZ_M[] = "zxcvbnm";
 
 BOOLEAN
 KeyboardIsKeyReleased(
-    char Code
+	char Code
 ) 
 {
-    return (Code & 0x80);
+	return (Code & 0x80);
 }
 
 void 
 KeyboardKeyPressed(
-    char Code
+	char Code
 )
 {
-    char character = 0;
-    if (!ConsoleIsReceivingInput() || KeyboardIsKeyReleased(Code))
-    {
-        return;
-    }
-    else
-    {
-        if (Code >= 0x2 && Code <= 0xB)
-        {
-           character = gDigitsMapping[Code - 0x2];
-        }
-        else if (Code >= 0x10 && Code <= 0x19)
-        {
-            character = gLettersMappingQ_P[Code - 0x10];
-        }
-        else if (Code >= 0x1E && Code <= 0x26)
-        {
-            character = gLettersMappingA_L[Code - 0x1E];   
-        }
-        else if (Code >= 0x2C && Code <= 0x32)
-        {
-            character = gLettersMappingZ_M[Code - 0x2C];   
-        }
-        else if (Code == 0x1C) // Enter
-        {
-            ConsoleSignalEndOfCommand();
-        }
-        else if (Code == 0xE) // Backspace
-        {
-            ConsoleEraseLastCharacterCommandBuffer();
-        }
-        else if (Code == 0x39) // Space
-        {
-            character = ' ';
-        }
-    }
+	char character = 0;
+	if (!ConsoleIsReceivingInput() || KeyboardIsKeyReleased(Code))
+	{
+		return;
+	}
+	else
+	{
+		if (Code >= 0x2 && Code <= 0xB)
+		{
+		   character = gDigitsMapping[Code - 0x2];
+		}
+		else if (Code >= 0x10 && Code <= 0x19)
+		{
+			character = gLettersMappingQ_P[Code - 0x10];
+		}
+		else if (Code >= 0x1E && Code <= 0x26)
+		{
+			character = gLettersMappingA_L[Code - 0x1E];   
+		}
+		else if (Code >= 0x2C && Code <= 0x32)
+		{
+			character = gLettersMappingZ_M[Code - 0x2C];   
+		}
+		else if (Code == 0x1C) // Enter
+		{
+			ConsoleSignalEndOfCommand();
+		}
+		else if (Code == 0xE) // Backspace
+		{
+			ConsoleEraseLastCharacterCommandBuffer();
+		}
+		else if (Code == 0x39) // Space
+		{
+			character = ' ';
+		}
+	}
 
-    if (character != 0)
-    {
-        ConsolePutCharCommandBuffer(character);
-    }
+	if (character != 0)
+	{
+		ConsolePutCharCommandBuffer(character);
+	}
 }

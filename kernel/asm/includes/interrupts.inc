@@ -66,49 +66,49 @@
 
 
 STRUC TRAP_FRAME
-    .RAX:   resq 1
-    .RBX:   resq 1
-    .RCX:   resq 1
-    .RDX:   resq 1 
-    .RSI:   resq 1 
-    .RDI:   resq 1 
-    .RBP:   resq 1 
-    .R8:    resq 1
-    .R9:    resq 1
-    .R10:   resq 1
-    .R11:   resq 1
-    .R12:   resq 1
-    .R13:   resq 1
-    .R14:   resq 1
-    .R15:   resq 1
-    .RIP:   resq 1
-    .FLAGS: resq 1 
+	.RAX:   resq 1
+	.RBX:   resq 1
+	.RCX:   resq 1
+	.RDX:   resq 1 
+	.RSI:   resq 1 
+	.RDI:   resq 1 
+	.RBP:   resq 1 
+	.R8:    resq 1
+	.R9:    resq 1
+	.R10:   resq 1
+	.R11:   resq 1
+	.R12:   resq 1
+	.R13:   resq 1
+	.R14:   resq 1
+	.R15:   resq 1
+	.RIP:   resq 1
+	.FLAGS: resq 1 
 ENDSTRUC
 
 %macro CREATE_TRAP_FRAME 1
-    mov [%1 + TRAP_FRAME.RAX], rax
-    mov [%1 + TRAP_FRAME.RBX], rbx
-    mov [%1 + TRAP_FRAME.RCX], rcx
-    mov [%1 + TRAP_FRAME.RCX], rcx
-    mov [%1 + TRAP_FRAME.RCX], rcx
-    mov [%1 + TRAP_FRAME.RCX], rcx
-    mov [%1 + TRAP_FRAME.RCX], rcx
-    mov [%1 + TRAP_FRAME.RDX], rdx
-    mov [%1 + TRAP_FRAME.RSI], rsi
-    mov [%1 + TRAP_FRAME.RDI], rdi
-    mov [%1 + TRAP_FRAME.RBP], rbp
-    mov [%1 + TRAP_FRAME.R8],  r8
-    mov [%1 + TRAP_FRAME.R9],  r9
-    mov [%1 + TRAP_FRAME.R10], r10
-    mov [%1 + TRAP_FRAME.R11], r11
-    mov [%1 + TRAP_FRAME.R12], r12
-    mov [%1 + TRAP_FRAME.R13], r13
-    mov [%1 + TRAP_FRAME.R14], r14
-    mov [%1 + TRAP_FRAME.R15], r15
-    
-    push QWORD [rsp]
-    pop  QWORD [%1 + TRAP_FRAME.RIP]
+	mov [%1 + TRAP_FRAME.RAX], rax
+	mov [%1 + TRAP_FRAME.RBX], rbx
+	mov [%1 + TRAP_FRAME.RCX], rcx
+	mov [%1 + TRAP_FRAME.RCX], rcx
+	mov [%1 + TRAP_FRAME.RCX], rcx
+	mov [%1 + TRAP_FRAME.RCX], rcx
+	mov [%1 + TRAP_FRAME.RCX], rcx
+	mov [%1 + TRAP_FRAME.RDX], rdx
+	mov [%1 + TRAP_FRAME.RSI], rsi
+	mov [%1 + TRAP_FRAME.RDI], rdi
+	mov [%1 + TRAP_FRAME.RBP], rbp
+	mov [%1 + TRAP_FRAME.R8],  r8
+	mov [%1 + TRAP_FRAME.R9],  r9
+	mov [%1 + TRAP_FRAME.R10], r10
+	mov [%1 + TRAP_FRAME.R11], r11
+	mov [%1 + TRAP_FRAME.R12], r12
+	mov [%1 + TRAP_FRAME.R13], r13
+	mov [%1 + TRAP_FRAME.R14], r14
+	mov [%1 + TRAP_FRAME.R15], r15
+	
+	push QWORD [rsp]
+	pop  QWORD [%1 + TRAP_FRAME.RIP]
 
-    pushf
-    pop QWORD [%1 + TRAP_FRAME.FLAGS]
+	pushf
+	pop QWORD [%1 + TRAP_FRAME.FLAGS]
 %endmacro

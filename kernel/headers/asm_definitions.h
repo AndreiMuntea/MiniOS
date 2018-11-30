@@ -12,7 +12,7 @@ TestTrapFrame(void);
 
 extern void
 IntLoadIdt(
-    void*   IdtDescriptor
+	void*   IdtDescriptor
 );
 
 extern void 
@@ -29,23 +29,23 @@ IntTimerISR(void);
 
 extern void 
 TimerSleep(
-    unsigned long long Milliseconds
+	unsigned long long Milliseconds
 );
 
 extern void 
 DiskReadSector(
-    short  Cylinder, 
-    char   SectorIndex, 
-    char   Head, 
-    char*  OutputBuffer
+	short  Cylinder, 
+	char   SectorIndex, 
+	char   Head, 
+	char*  OutputBuffer
 );
 
 extern void 
 DiskWriteSector(
-    short  Cylinder, 
-    char   SectorIndex, 
-    char   Head, 
-    char*  InputBuffer
+	short  Cylinder, 
+	char   SectorIndex, 
+	char   Head, 
+	char*  InputBuffer
 );
 
 extern void

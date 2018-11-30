@@ -9,10 +9,10 @@
 #pragma pack(push, 1)
 typedef struct _GLOBAL_DATA
 {
-    SCREEN_DATA     ScreenData;
-    IDT             Idt;
-    IDT_DESCRIPTOR  IdtDescriptor;
-    CONSOLE_DATA    ConsoleData;
+	SCREEN_DATA     ScreenData;
+	IDT             Idt;
+	IDT_DESCRIPTOR  IdtDescriptor;
+	CONSOLE_DATA    ConsoleData;
 }GLOBAL_DATA, *PGLOBAL_DATA;
 #pragma pack(pop)
 

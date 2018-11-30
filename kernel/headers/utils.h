@@ -5,21 +5,21 @@
 
 char
 UtilsHexdigitToChar(
-    BYTE Hexdigit
+	BYTE Hexdigit
 );
 
 void
 UtilsZeroMemory(
-    char*   Buffer,
-    QWORD   BufferSize
+	char*   Buffer,
+	QWORD   BufferSize
 );
 
 BOOLEAN
 UtilsAreStringsEqual(
-    char*   Buffer1,
-    QWORD   Buffer1Size,
-    char*   Buffer2,
-    QWORD   Buffer2Size
+	char*   Buffer1,
+	QWORD   Buffer1Size,
+	char*   Buffer2,
+	QWORD   Buffer2Size
 );
 
 
