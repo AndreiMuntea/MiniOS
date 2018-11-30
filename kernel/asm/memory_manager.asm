@@ -54,34 +54,30 @@ MemInit:
 	leave 
 	ret 
 
-; void* MemAllocPage()
+; BYTE MemAllocPage()
 MemAllocPage:
 	push rbp 
 	mov rbp, rsp 
-	push rcx 
 
-	mov rcx, [gPagesBitmap] ; rcx = gPagesBitmap
-	not rcx                 ; rcx = !gPagesBitmap
-	bsf rcx, rcx            ; rcx = LSB(!gPagesBitmap)
+	mov rax, [gPagesBitmap] ; rax = gPagesBitmap
+	not rax                 ; rax = !gPagesBitmap
+	bsf rax, rax            ; rax = LSB(!gPagesBitmap)
 	jnz .FoundPage          ; ZF set if no bit was set => all pages are allocated
 
 	.NoPageFound:
-		xor rax, rax  ; Return NULL
+		mov rax, -1
 	jmp .Return
 
 	.FoundPage:
-		; Save return address
-		mov rax, rcx 
-		shl rax, 12
-		add rax, BASE_ADDRESS
-
 		; Mark page present
-		bts [gPagesBitmap], rcx
-		bts dword [PT + 8 * rcx], 0            
+		bts [gPagesBitmap], rax
+		bts dword [PT + 8 * rax], 0    
+
+		mov rcx, rax 
+		call MemInvalidateTranslationBuffer        
 	jmp .Return
 
 	.Return:
-	pop rcx 
 	leave 
 	ret 
 
@@ -95,9 +91,12 @@ MemFreePage:
 	cmp rcx, MAX_PAGES
 	jae .Return
 
-	; Mark page not present
+	; Mark page not present 
 	btr [gPagesBitmap], rcx
-	btr dword [PT + 8 * rcx], 0                 
+	btr dword [PT + 8 * rcx], 0  
+	
+	; Invalidate translation buffer for given page
+	call MemInvalidateTranslationBuffer
 
 	.Return:
 	RESTORE_REGS
@@ -117,14 +116,29 @@ MemUninit:
 	cmp rcx, MAX_PAGES 
 	jne .FreePage
 	
-	; PDT[255] = will be marked not present
-	btr dword [PDT + 8 * 255], 0 
+	; PDT[8] = will be marked not present
+	btr dword [PDT + 8 * 8], 0 
 
 	; Clear 4 kb of memory
 	mov edi, PT
 	mov ecx, 1024
 	xor eax, eax
 	rep stosd  
+
+	RESTORE_REGS
+	leave 
+	ret 
+
+; void MemFreePage(BYTE PageIndex)
+MemInvalidateTranslationBuffer:
+	push rbp 
+	mov rbp, rsp 
+	SAVE_REGS
+
+	; RCX - PageIndex
+	shl rcx, 12
+	add rcx, BASE_ADDRESS
+	invlpg [rcx]
 
 	RESTORE_REGS
 	leave 

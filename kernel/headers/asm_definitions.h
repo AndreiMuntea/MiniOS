@@ -54,7 +54,7 @@ MemInit();
 extern void
 MemUninit();
 
-extern void*
+extern char
 MemAllocPage();
 
 extern void

@@ -8,10 +8,13 @@ void
 ConsolePrintHelp(void)
 {
 	ScPrint("Available commands:%n");
-	ScPrint("    > trapframe - Generates a division by 0 exception%n");
-	ScPrint("    > timer     - Prints 2 consecutive delayed messages%n");
-	ScPrint("    > writedisk - Writes last sector from disk%n");
-	ScPrint("    > readdisk  - Reads last sector from disk%n");
+	ScPrint("    > trapframe      - Generates a division by 0 exception%n");
+	ScPrint("    > timer          - Prints 2 consecutive delayed messages%n");
+	ScPrint("    > writedisk      - Writes last sector from disk%n");
+	ScPrint("    > readdisk       - Reads last sector from disk%n");
+	ScPrint("    > heapscenario1  - Alloc first 3 pages, writes 0xDEADCODEDEADCODE to first qword then frees the memory%n");
+	ScPrint("    > heapscenario2  - Alloc 64 pages, frees one then allocate another one%n");
+	ScPrint("    > heapscenario3  - Alloc one page, frees it then tries to read from it%n");
 }
 
 void
@@ -46,6 +49,18 @@ ConsoleMatchCommand(void)
 	else if (UtilsAreStringsEqual("readdisk", sizeof("readdisk"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
 	{
 		ConsoleReadDiskCommand();
+	}
+	else if (UtilsAreStringsEqual("heapscenario1", sizeof("heapscenario1"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
+	{
+		ConsoleHeapScenario1Command();
+	}
+	else if (UtilsAreStringsEqual("heapscenario2", sizeof("heapscenario2"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
+	{
+		ConsoleHeapScenario2Command();
+	}
+	else if (UtilsAreStringsEqual("heapscenario3", sizeof("heapscenario3"), gGlobalData.ConsoleData.CommandBuffer, gGlobalData.ConsoleData.CommandBufferCursor))
+	{
+		ConsoleHeapScenario3Command();
 	}
 	else
 	{
@@ -159,4 +174,75 @@ ConsoleWriteDiskCommand()
 	char  head        = 15;
 
 	DiskWriteSector(cylinder, sectorIndex, head, buffer);
+}
+
+void
+ConsoleHeapScenario1Command()
+{
+	QWORD* p1 = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+	QWORD* p2 = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+	QWORD* p3 = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+
+	p1[0] = 0xDEADC0DEDEADC0DE;
+	p2[0] = 0xDEADC0DEDEADC0DE;
+	p3[0] = 0xDEADC0DEDEADC0DE;
+
+	ScPrint("Allocating 1st page : %x%n", p1);
+	ScPrint("Allocating 2nd page : %x%n", p2);
+	ScPrint("Allocating 3rd page : %x%n", p3);
+ 
+	DebugBreak();
+
+	HeapFree(&gGlobalData.Heap, p1);
+	HeapFree(&gGlobalData.Heap, p2);
+	HeapFree(&gGlobalData.Heap, p3);
+}
+
+void
+ConsoleHeapScenario2Command()
+{
+	QWORD* pages[MAX_PAGES + 1] = {0};
+	for(BYTE i = 0; i < MAX_PAGES; ++i)
+	{
+		pages[i] = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+	}
+
+	ScPrint("Allocated 64 pages %n");
+	
+	pages[MAX_PAGES] = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+	ScPrint("Allocating 65th page : %x%n", pages[MAX_PAGES]);
+
+	ScPrint("Freeing 34th page : %x%n", pages[34]);
+	HeapFree(&gGlobalData.Heap, pages[34]);
+
+	pages[MAX_PAGES] = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+	ScPrint("Allocating 65th page : %x%n", pages[MAX_PAGES]);
+
+	pages[MAX_PAGES][0] = 0xDEADC0DEDEADC0DE;
+
+	for(BYTE i = 0; i < MAX_PAGES + 1; ++i)
+	{
+		HeapFree(&gGlobalData.Heap, pages[i]);
+	}
+	DebugBreak();
+}
+
+void
+ConsoleHeapScenario3Command()
+{
+	QWORD* p = (QWORD*)HeapAlloc(&gGlobalData.Heap);
+
+	ScPrint("Allocated 1 page %x %n", p);
+	p[0] = 0xABCDEF;
+
+	ScPrint("Wrote %x %n", p[0]);
+
+	HeapFree(&gGlobalData.Heap, p);
+	
+	ScPrint("Trying to read from that page after free%n");
+	DebugBreak();
+
+	QWORD dummy = p[0];
+	ScPrint("Read: %x %n", dummy);
+	DebugBreak();
 }

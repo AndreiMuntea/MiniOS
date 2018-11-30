@@ -46,6 +46,15 @@ ConsoleReadDiskCommand();
 void
 ConsoleWriteDiskCommand();
 
+void
+ConsoleHeapScenario1Command();
+
+void
+ConsoleHeapScenario2Command();
+
+void
+ConsoleHeapScenario3Command();
+
 BOOLEAN
 ConsoleIsReceivingInput();
 

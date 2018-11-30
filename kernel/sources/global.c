@@ -13,6 +13,7 @@ InitGlobalData(void)
 
 	IntInitializeIdt(&gGlobalData.Idt);
 	IntInitializeIdtDescriptor(&gGlobalData.IdtDescriptor, &gGlobalData.Idt);
+	HeapCreate(&gGlobalData.Heap);
 
 	ConsoleResetCommandBuffer();
 }
@@ -25,5 +26,6 @@ UninitGlobalData(void)
 	gGlobalData.ScreenData.CurrentLine   = 0;
 	gGlobalData.ScreenData.Color         = 0;
 	
+	HeapDestroy(&gGlobalData.Heap);
 	ConsoleResetCommandBuffer();
 }

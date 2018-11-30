@@ -5,6 +5,7 @@
 #include "console.h"
 #include "definitions.h"
 #include "interrupts.h"
+#include "heap.h"
 
 #pragma pack(push, 1)
 typedef struct _GLOBAL_DATA
@@ -13,6 +14,7 @@ typedef struct _GLOBAL_DATA
 	IDT             Idt;
 	IDT_DESCRIPTOR  IdtDescriptor;
 	CONSOLE_DATA    ConsoleData;
+	HEAP			Heap;
 }GLOBAL_DATA, *PGLOBAL_DATA;
 #pragma pack(pop)
 
